@@ -1,0 +1,62 @@
+[
+  {
+    "id": "shame_001",
+    "productName": "SuperBerry Fit Protein Smoothie",
+    "frontClaim": "100% Organic, All-Natural Superfood & Antioxidants",
+    "actualGrade": "E",
+    "actualDetails": "42g Sugars (38g Added Sugar), NOVA 4 Ultra-Processed",
+    "discrepancyScore": 96,
+    "upvotes": 1420,
+    "shares": 384,
+    "submittedAt": "2026-08-01T12:00:00.000Z",
+    "backFacts": "Ingredients: Water, High Fructose Corn Syrup, Concentrated Apple Juice, Synthetic Flavor, E129 Red 40, Soy Lecithin."
+  },
+  {
+    "id": "shame_002",
+    "productName": "Crunchy Honey Oat Fitness Granola",
+    "frontClaim": "Heart Healthy, High Fiber, 0% Trans Fat",
+    "actualGrade": "D",
+    "actualDetails": "28g Sugars, Palm Oil, Sodium 420mg",
+    "discrepancyScore": 88,
+    "upvotes": 950,
+    "shares": 210,
+    "submittedAt": "2026-08-02T14:30:00.000Z",
+    "backFacts": "Ingredients: Rolled Oats, Sugar, Hydrogenated Palm Oil, Molasses, Maltodextrin, Salt, BHT."
+  },
+  {
+    "id": "shame_003",
+    "productName": "Kids Orchard 100% Real Fruit Bites",
+    "frontClaim": "Made with Real Fruit, No Artificial Flavors",
+    "actualGrade": "E",
+    "actualDetails": "54g Sugars, 0g Fiber, NOVA 4 Ultra-Processed",
+    "discrepancyScore": 94,
+    "upvotes": 2180,
+    "shares": 612,
+    "submittedAt": "2026-08-03T09:15:00.000Z",
+    "backFacts": "Ingredients: Glucose Syrup, Sugar, Apple Juice Concentrate, Gelatin, Citric Acid, Carnauba Wax, Blue 1."
+  },
+  {
+    "id": "shame_004",
+    "productName": "Artisanal Multigrain Veggie Chips",
+    "frontClaim": "Baked Real Vegetables, Gluten-Free, Non-GMO",
+    "actualGrade": "D",
+    "actualDetails": "24g Total Fat, 680mg Sodium, Processed Potato Starch Base",
+    "discrepancyScore": 82,
+    "upvotes": 640,
+    "shares": 145,
+    "submittedAt": "2026-08-04T18:20:00.000Z",
+    "backFacts": "Ingredients: Potato Flour, Sunflower Oil, Corn Starch, Spinach Powder (1%), Tomato Paste (1%), Sea Salt, E621 MSG."
+  },
+  {
+    "id": "shame_005",
+    "productName": "Zero Sugar Electrolyte Fitness Water",
+    "frontClaim": "Hydration Boost, Zero Calories, Natural Botanical Flavor",
+    "actualGrade": "C",
+    "actualDetails": "Contains Sucralose, Acesulfame K, Titanium Dioxide",
+    "discrepancyScore": 75,
+    "upvotes": 490,
+    "shares": 98,
+    "submittedAt": "2026-08-05T11:00:00.000Z",
+    "backFacts": "Ingredients: Water, Citric Acid, Sucralose, Acesulfame Potassium, E171 Titanium Dioxide, Sodium Citrate."
+  }
+]
