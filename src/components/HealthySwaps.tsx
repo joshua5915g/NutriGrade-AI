@@ -12,23 +12,26 @@ import {
 } from 'lucide-react';
 
 import { NutriScoreGrade } from '../types/nutrition';
+import { UserProfile } from '../types/user';
 import { getHealthySwaps, SwapProduct } from '../lib/algorithms/swapsEngine';
 
 interface HealthySwapsProps {
   productName?: string;
   currentGrade: NutriScoreGrade;
+  profile?: UserProfile | null;
 }
 
 export const HealthySwaps: React.FC<HealthySwapsProps> = ({
   productName = '',
   currentGrade,
+  profile,
 }) => {
   // Only display swaps for Grade C, D, or E items
   if (currentGrade === 'A' || currentGrade === 'B') {
     return null;
   }
 
-  const swaps: SwapProduct[] = getHealthySwaps(productName, currentGrade);
+  const swaps: SwapProduct[] = getHealthySwaps(productName, currentGrade, profile || undefined);
   if (swaps.length === 0) return null;
 
   return (

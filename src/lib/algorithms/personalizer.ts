@@ -1,5 +1,6 @@
 import { AnalysisResult } from '../../types/nutrition';
 import { UserProfile, PersonalizedAlert, PersonalizedAnalysis } from '../../types/user';
+import { auditDietaryPreferences } from './dietaryAudit';
 
 // List of gluten-containing ingredients and keywords
 const GLUTEN_KEYWORDS = [
@@ -17,11 +18,11 @@ const GLUTEN_KEYWORDS = [
 
 /**
  * Applies a personalized medical and nutritional overlay on top of standard AnalysisResult.
- * Evaluates diabetic sugar limits, hypertension sodium limits, and celiac gluten presence.
+ * Evaluates diabetic sugar limits, hypertension sodium limits, celiac gluten, and Yuka-style dietary preferences.
  *
  * @param analysis - Consolidated food analysis output (Normalized nutrition, Nutri-Score, NOVA)
- * @param profile - User profile containing medical flags and daily goals
- * @param ingredients - Optional list of ingredients for gluten detection
+ * @param profile - User profile containing medical flags, dietary preferences, and daily goals
+ * @param ingredients - Optional list of ingredients for allergen & preference detection
  * @returns PersonalizedAnalysis with user-specific health alerts and a boolean suitability flag
  */
 export function applyPersonalOverlay(
@@ -91,6 +92,21 @@ export function applyPersonalOverlay(
     }
   }
 
+  // 4. Check Yuka-Style Dietary Preferences Audit
+  const additiveIdentifiers = (analysis.additives || []).flatMap((a) => [
+    a.eNumber,
+    a.commonName,
+  ]);
+  const dietaryAuditAlerts = auditDietaryPreferences(ingredients, additiveIdentifiers, profile);
+
+  dietaryAuditAlerts.forEach((dAlert) => {
+    alerts.push({
+      severity: dAlert.severity === 'BLOCKED' ? 'critical' : 'high',
+      type: 'dietary',
+      message: `${dAlert.diet} Preference Violation: ${dAlert.reason}`,
+    });
+  });
+
   // Determine overall suitability (unsuitable if any high or critical alerts exist)
   const isSuitable = !alerts.some(
     (alert) => alert.severity === 'high' || alert.severity === 'critical'
@@ -102,3 +118,4 @@ export function applyPersonalOverlay(
     isSuitable,
   };
 }
+

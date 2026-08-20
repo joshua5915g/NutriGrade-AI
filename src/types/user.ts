@@ -19,9 +19,23 @@ export interface UserGoals {
 }
 
 /**
+ * DietaryPreferences represents lifestyle choices and ingredient restrictions
+ * (Yuka-style preferences such as Vegan, Palm-Oil-Free, Pork-Free, etc.).
+ */
+export interface DietaryPreferences {
+  palmOilFree: boolean;
+  isVegan: boolean;
+  isVegetarian: boolean;
+  isPorkFree: boolean;
+  isLactoseFree: boolean;
+  isSoyFree: boolean;
+  isSulfiteFree: boolean;
+  isGlutenFree: boolean;
+}
+
+/**
  * UserProfile represents the core profile of the user, including
- * medical conditions and nutritional goals. This profile is referenced
- * during food analysis to generate personalized warnings and suitability scores.
+ * medical conditions, dietary preferences, and nutritional goals.
  */
 export interface UserProfile {
   /** Medical flags that dictate specific dietary restrictions and warnings */
@@ -38,6 +52,9 @@ export interface UserProfile {
     /** Whether the user is actively on a low-sodium diet */
     lowSodiumDiet: boolean;
   };
+
+  /** Yuka-style lifestyle and dietary preference filters */
+  dietaryPreferences?: DietaryPreferences;
   
   /** Personal target thresholds for dietary tracking */
   goals: UserGoals;
@@ -55,7 +72,7 @@ export interface PersonalizedAlert {
   message: string;
   
   /** Category type of the alert */
-  type: 'diabetes' | 'hypertension' | 'celiac' | 'general';
+  type: 'diabetes' | 'hypertension' | 'celiac' | 'dietary' | 'general';
 }
 
 /**
@@ -69,4 +86,5 @@ export interface PersonalizedAnalysis extends AnalysisResult {
   /** Overall boolean suitability of the food item for the user */
   isSuitable: boolean;
 }
+
 

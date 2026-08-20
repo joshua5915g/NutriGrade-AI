@@ -25,6 +25,7 @@ import { GlycemicAndGutCard } from './GlycemicAndGutCard';
 import { RegulatoryAndHiddenSugarsCard } from './RegulatoryAndHiddenSugarsCard';
 import { SeedOilBanner } from './SeedOilBanner';
 import { FopNutritionBox } from './FopNutritionBox';
+import { FavoriteButton } from './FavoriteButton';
 import { detectSeedOils } from '../lib/algorithms/seedOilRadar';
 import { calculateFdaFop } from '../lib/algorithms/fdaFopSimulator';
 
@@ -103,9 +104,9 @@ export const NutritionDashboard: React.FC<NutritionDashboardProps> = ({
 
   // Helper status functions for 6 macro cards
   const getSugarStatus = (sugars: number) => {
-    if (sugars <= 5) return { color: 'text-emerald-500', bg: 'bg-emerald-500/10', label: 'Healthy' };
+    if (sugars <= 5) return { color: 'text-emerald-500', bg: 'bg-emerald-500/10', label: 'Low Sugar' };
     if (sugars <= 15) return { color: 'text-amber-500', bg: 'bg-amber-500/10', label: 'Moderate' };
-    return { color: 'text-rose-500', bg: 'bg-rose-500/10', label: 'High Risk' };
+    return { color: 'text-rose-500', bg: 'bg-rose-500/10', label: 'High Sugar' };
   };
 
   const getSodiumStatus = (sodiumMg: number) => {
@@ -169,9 +170,16 @@ export const NutritionDashboard: React.FC<NutritionDashboardProps> = ({
             </p>
           </div>
 
-          {/* Nutri-Score Hero Component */}
           <div className="shrink-0 flex flex-col items-center p-4 rounded-3xl bg-slate-50/50 dark:bg-slate-800/50 border border-slate-200/40 dark:border-slate-700/40">
-            <NutriScoreBadge grade={nutriScore.grade} score={nutriScore.score} size="lg" />
+            <div className="flex items-center gap-4">
+              <FavoriteButton
+                productName={explanation.slice(0, 40)}
+                grade={nutriScore.grade}
+                novaGroup={novaGroup}
+                analysis={analysis}
+              />
+              <NutriScoreBadge grade={nutriScore.grade} score={nutriScore.score} size="lg" />
+            </div>
           </div>
         </div>
       </div>
@@ -412,6 +420,7 @@ export const NutritionDashboard: React.FC<NutritionDashboardProps> = ({
       <HealthySwaps
         productName={explanation}
         currentGrade={nutriScore.grade}
+        profile={userProfile}
       />
 
       {/* 9. FRONT VS. BACK GREENWASHING AUDIT CARD */}

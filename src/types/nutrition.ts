@@ -272,3 +272,21 @@ export interface AnalysisResult {
    */
   allergen_warnings: AllergenWarning[];
 }
+
+/**
+ * SearchProductResult represents a mapped food item returned from search queries,
+ * containing metadata, raw nutritional values, and full algorithmic analysis.
+ */
+export interface SearchProductResult {
+  id: string;
+  barcode: string;
+  productName: string;
+  brand: string;
+  imageThumbUrl: string;
+  nutriScoreGrade: NutriScoreGrade;
+  novaGroup: NovaGroup;
+  ingredients: string[];
+  rawData: RawNutritionData;
+  analysis: AnalysisResult;
+}
+

@@ -13,10 +13,13 @@ import {
   History,
   PackageCheck,
   Flame,
+  SlidersHorizontal,
+  Leaf,
+  ShoppingCart,
 } from 'lucide-react';
 
-import { RawNutritionData, AnalysisResult } from '../types/nutrition';
-import { UserProfile, PersonalizedAnalysis } from '../types/user';
+import { RawNutritionData, AnalysisResult, SearchProductResult } from '../types/nutrition';
+import { UserProfile, PersonalizedAnalysis, DietaryPreferences } from '../types/user';
 import { normalizeTo100g } from '../lib/utils/normalization';
 import { calculateNutriScore } from '../lib/algorithms/nutriScore';
 import { detectNovaGroup } from '../lib/algorithms/novaScale';
@@ -24,12 +27,28 @@ import { applyPersonalOverlay } from '../lib/algorithms/personalizer';
 import { detectGreenwashing, GreenwashingResult } from '../lib/algorithms/greenwashingDetector';
 import { runBiologicalPipeline } from '../lib/algorithms/biologicalEngine';
 import { saveScanToHistory } from '../lib/storage/scanHistory';
+import { saveHistoryRecord } from '../lib/storage/historyManager';
 import { UploadZone } from '../components/UploadZone';
 import { NutritionDashboard } from '../components/NutritionDashboard';
 import { MarketingAuditCard, MarketingClaim } from '../components/MarketingAuditCard';
 import { ScanHistory } from '../components/ScanHistory';
 import { ExportReport } from '../components/ExportReport';
 import { SampleType } from '../components/SampleDemos';
+import { GlobalSearchBar } from '../components/GlobalSearchBar';
+import {
+  DietaryPreferencesModal,
+  DEFAULT_DIETARY_PREFERENCES,
+  DIETARY_CONFIG,
+} from '../components/DietaryPreferencesModal';
+import { OfflineBanner } from '../components/OfflineBanner';
+import {
+  preloadTopProducts,
+  getCachedProduct,
+  cacheProduct,
+  addToOfflineQueue,
+  getOfflineQueue,
+  syncOfflineQueue,
+} from '../lib/storage/offlineDb';
 
 // Mock sample demo items for instant 1-click testing
 const DEMO_SAMPLES: Record<SampleType, { name: string; frontText: string; ingredients: string[]; raw: RawNutritionData }> = {
@@ -107,7 +126,7 @@ export default function Home() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // User Profile Medical Flags State
+  // User Profile Medical Flags & Dietary Preferences State
   const [profile, setProfile] = useState<UserProfile>({
     medicalFlags: {
       isDiabetic: true,
@@ -115,6 +134,7 @@ export default function Home() {
       isCeliac: false,
       lowSodiumDiet: false,
     },
+    dietaryPreferences: DEFAULT_DIETARY_PREFERENCES,
     goals: {
       targetCaloriesPerDay: 2000,
       maxSodiumPerDayMg: 2000,
@@ -122,6 +142,13 @@ export default function Home() {
       weightGoal: 'maintain',
     },
   });
+
+  const [isDietaryModalOpen, setIsDietaryModalOpen] = useState(false);
+
+  // Offline PWA State
+  const [isOffline, setIsOffline] = useState(false);
+  const [queuedCount, setQueuedCount] = useState(0);
+  const [isSyncing, setIsSyncing] = useState(false);
 
   // Current Analysis Output State
   const [currentAnalysis, setCurrentAnalysis] = useState<{
@@ -140,14 +167,55 @@ export default function Home() {
   const [currentProductName, setCurrentProductName] = useState<string>('');
   const [currentIngredients, setCurrentIngredients] = useState<string[]>([]);
 
-  // Register PWA service worker on mount
+  // Register PWA service worker and initialize IndexedDB offline database on mount
   useEffect(() => {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js').catch((err) => {
         console.warn('SW registration failed:', err);
       });
     }
+
+    if (typeof window !== 'undefined') {
+      setIsOffline(!navigator.onLine);
+
+      // Pre-load staple products into IndexedDB
+      preloadTopProducts().catch(console.warn);
+
+      // Check pending offline queue
+      getOfflineQueue()
+        .then((q) => setQueuedCount(q.length))
+        .catch(console.warn);
+
+      const handleOnline = async () => {
+        setIsOffline(false);
+        setIsSyncing(true);
+        await syncOfflineQueue();
+        setIsSyncing(false);
+        const remaining = await getOfflineQueue();
+        setQueuedCount(remaining.length);
+      };
+
+      const handleOffline = () => {
+        setIsOffline(true);
+      };
+
+      window.addEventListener('online', handleOnline);
+      window.addEventListener('offline', handleOffline);
+
+      return () => {
+        window.removeEventListener('online', handleOnline);
+        window.removeEventListener('offline', handleOffline);
+      };
+    }
   }, []);
+
+  const handleManualSync = async () => {
+    setIsSyncing(true);
+    await syncOfflineQueue();
+    setIsSyncing(false);
+    const remaining = await getOfflineQueue();
+    setQueuedCount(remaining.length);
+  };
 
   // Toggle dark mode class on HTML body
   const toggleDarkMode = () => {
@@ -169,7 +237,25 @@ export default function Home() {
       const updatedPersonalized = applyPersonalOverlay(
         currentAnalysis.analysis,
         updatedProfile,
-        []
+        currentIngredients
+      );
+      setCurrentAnalysis({
+        ...currentAnalysis,
+        personalized: updatedPersonalized,
+      });
+    }
+  };
+
+  // Update Yuka-Style Dietary Preferences
+  const updateDietaryPreferences = (updatedPrefs: DietaryPreferences) => {
+    const updatedProfile = { ...profile, dietaryPreferences: updatedPrefs };
+    setProfile(updatedProfile);
+
+    if (currentAnalysis) {
+      const updatedPersonalized = applyPersonalOverlay(
+        currentAnalysis.analysis,
+        updatedProfile,
+        currentIngredients
       );
       setCurrentAnalysis({
         ...currentAnalysis,
@@ -239,6 +325,7 @@ export default function Home() {
     setCurrentProductName(frontText || 'Scanned Product');
     setCurrentIngredients(ingredients || []);
     saveScanToHistory(frontText || 'Scanned Product', baseAnalysis, 'upload');
+    saveHistoryRecord(frontText || 'Scanned Product', baseAnalysis, '', 'upload').catch(console.warn);
   };
 
   // Handle uploaded file (via API endpoint or fallback parsing)
@@ -337,11 +424,28 @@ export default function Home() {
     }
   };
 
-  // Handle direct barcode search
+  // Handle direct barcode search (with Offline IndexedDB cache fallback & queueing)
   const handleBarcodeSubmitted = async (barcode: string) => {
     setIsAnalyzing(true);
     setError(null);
     setDualAuditClaims(null);
+
+    // If device is offline, query IndexedDB directly
+    if (typeof navigator !== 'undefined' && !navigator.onLine) {
+      const cached = await getCachedProduct(barcode);
+      if (cached) {
+        runFullAnalysisPipeline(cached.rawData, cached.ingredients, `${cached.productName} (Offline Cache)`);
+        setIsAnalyzing(false);
+        return;
+      } else {
+        await addToOfflineQueue(barcode);
+        const queue = await getOfflineQueue();
+        setQueuedCount(queue.length);
+        setError(`Offline Mode Active: Barcode "${barcode}" is not in local cache. Added to Offline Queue and will automatically resolve when connection restores.`);
+        setIsAnalyzing(false);
+        return;
+      }
+    }
 
     try {
       const formData = new FormData();
@@ -364,7 +468,16 @@ export default function Home() {
         throw new Error('Product unlisted in Open Food Facts database.');
       }
     } catch (err: any) {
-      setError(err.message || 'Unable to resolve product by barcode.');
+      // Network failure fallback to IndexedDB or queue
+      const cached = await getCachedProduct(barcode);
+      if (cached) {
+        runFullAnalysisPipeline(cached.rawData, cached.ingredients, `${cached.productName} (Offline Cache)`);
+      } else {
+        await addToOfflineQueue(barcode);
+        const queue = await getOfflineQueue();
+        setQueuedCount(queue.length);
+        setError(err.message || 'Unable to resolve product by barcode. Queued for offline sync.');
+      }
     } finally {
       setIsAnalyzing(false);
     }
@@ -380,6 +493,30 @@ export default function Home() {
       runFullAnalysisPipeline(sample.raw, sample.ingredients, sample.frontText);
       setIsAnalyzing(false);
     }, 350);
+  };
+
+  // Handle direct global search product selection
+  const handleProductSelectedFromSearch = (product: SearchProductResult) => {
+    setIsAnalyzing(true);
+    setError(null);
+    setDualAuditClaims(null);
+
+    // Save product to local IndexedDB for future offline usage
+    cacheProduct(product).catch(console.warn);
+
+    const personalized = applyPersonalOverlay(product.analysis, profile, product.ingredients);
+    const greenwashing = detectGreenwashing(product.productName, product.rawData, product.ingredients);
+
+    setCurrentAnalysis({
+      analysis: product.analysis,
+      personalized,
+      greenwashing,
+    });
+
+    setCurrentProductName(product.productName);
+    setCurrentIngredients(product.ingredients);
+    saveScanToHistory(product.productName, product.analysis, 'global_search');
+    setIsAnalyzing(false);
   };
 
   return (
@@ -400,13 +537,22 @@ export default function Home() {
           </div>
 
           <div className="flex items-center gap-2">
+            {/* Shopping Lists Button */}
+            <Link
+              href="/lists"
+              className="px-3 py-1.5 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-semibold text-xs transition-all border border-emerald-500/20 flex items-center gap-1.5"
+            >
+              <ShoppingCart className="w-4 h-4 text-emerald-500" />
+              <span className="hidden sm:inline">Shopping Lists</span>
+            </Link>
+
             {/* Hall of Shame Button */}
             <Link
               href="/hall-of-shame"
               className="px-3 py-1.5 rounded-full bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 font-semibold text-xs transition-all border border-rose-500/20 flex items-center gap-1.5"
             >
               <Flame className="w-4 h-4 text-rose-500" />
-              <span>Hall of Shame</span>
+              <span className="hidden sm:inline">Hall of Shame</span>
             </Link>
 
             {/* Pantry Audit Button */}
@@ -415,17 +561,18 @@ export default function Home() {
               className="px-3 py-1.5 rounded-full bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 font-semibold text-xs transition-all border border-indigo-500/20 flex items-center gap-1.5"
             >
               <PackageCheck className="w-4 h-4 text-indigo-500" />
-              <span>Pantry Audit</span>
+              <span className="hidden sm:inline">Pantry Audit</span>
             </Link>
 
-            {/* Scan History Button */}
-            <button
-              onClick={() => setIsHistoryOpen(true)}
+            {/* Scan History Page Button */}
+            <Link
+              href="/history"
               className="p-2.5 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-all border border-slate-200/50 dark:border-slate-700/50"
-              aria-label="Scan History"
+              title="Full Unlimited Scan History"
+              aria-label="Full Scan History"
             >
               <History className="w-4 h-4 text-indigo-500" />
-            </button>
+            </Link>
 
             {/* Theme Toggle */}
             <button
@@ -438,6 +585,14 @@ export default function Home() {
           </div>
         </div>
       </header>
+
+      {/* AMBER OFFLINE MODE INDICATOR & SYNC BANNER */}
+      <OfflineBanner
+        isOffline={isOffline}
+        queuedCount={queuedCount}
+        onSyncNow={handleManualSync}
+        isSyncing={isSyncing}
+      />
 
       {/* 2. MAIN CONTENT AREA */}
       <main className="flex-1 max-w-6xl mx-auto w-full px-4 md:px-8 pt-8 space-y-8">
@@ -456,8 +611,13 @@ export default function Home() {
           </h1>
 
           <p className="text-base md:text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
-            Scan barcode, upload a single label, or use dual-scan mode to cross-verify front marketing claims against back nutrition facts with AI-powered regulatory audits.
+            Search any food product by name or brand, scan barcode, upload a single label, or use dual-scan mode to cross-verify front marketing claims against back nutrition facts.
           </p>
+
+          {/* GLOBAL TEXT SEARCH BAR */}
+          <div className="max-w-2xl mx-auto w-full pt-2">
+            <GlobalSearchBar onSelectProduct={handleProductSelectedFromSearch} />
+          </div>
 
           {/* Interactive Medical Profile Bar */}
           <div className="p-4 rounded-3xl backdrop-blur-xl bg-white/60 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800/60 shadow-lg max-w-xl mx-auto space-y-3">
@@ -490,6 +650,50 @@ export default function Home() {
                   >
                     {isActive && <Check className="w-3.5 h-3.5" />}
                     <span>{label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Yuka-Style Lifestyle Dietary Preferences Selector */}
+          <div className="p-4 rounded-3xl backdrop-blur-xl bg-white/60 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800/60 shadow-lg max-w-xl mx-auto space-y-3">
+            <div className="flex items-center justify-between text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+              <span className="flex items-center gap-1.5">
+                <Leaf className="w-4 h-4 text-emerald-500" />
+                Yuka Dietary Preference Filters
+              </span>
+              <button
+                onClick={() => setIsDietaryModalOpen(true)}
+                className="text-emerald-500 hover:underline flex items-center gap-1 text-xs font-bold"
+              >
+                <SlidersHorizontal className="w-3.5 h-3.5" />
+                Configure ({Object.values(profile.dietaryPreferences || {}).filter(Boolean).length} Active)
+              </button>
+            </div>
+
+            {/* Quick Dietary Preference Toggle Pills */}
+            <div className="flex flex-wrap gap-1.5">
+              {DIETARY_CONFIG.map((item) => {
+                const isActive = profile.dietaryPreferences?.[item.key] || false;
+                return (
+                  <button
+                    key={item.key}
+                    onClick={() => {
+                      const updated = {
+                        ...(profile.dietaryPreferences || DEFAULT_DIETARY_PREFERENCES),
+                        [item.key]: !isActive,
+                      };
+                      updateDietaryPreferences(updated);
+                    }}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all border ${
+                      isActive
+                        ? 'bg-emerald-500 text-white border-emerald-500 shadow-md shadow-emerald-500/20'
+                        : 'bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-400 border-slate-200/60 dark:border-slate-700/60 hover:bg-slate-200 dark:hover:bg-slate-700'
+                    }`}
+                  >
+                    {isActive && <Check className="w-3.5 h-3.5" />}
+                    <span>{item.title}</span>
                   </button>
                 );
               })}
@@ -540,6 +744,14 @@ export default function Home() {
 
       {/* SCAN HISTORY SLIDE-OVER DRAWER */}
       <ScanHistory isOpen={isHistoryOpen} onClose={() => setIsHistoryOpen(false)} />
+
+      {/* YUKA DIETARY PREFERENCES MODAL */}
+      <DietaryPreferencesModal
+        profile={profile}
+        onUpdatePreferences={updateDietaryPreferences}
+        isOpen={isDietaryModalOpen}
+        onClose={() => setIsDietaryModalOpen(false)}
+      />
     </div>
   );
 }
