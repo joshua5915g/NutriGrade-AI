@@ -54,6 +54,7 @@ import {
   DEFAULT_DIETARY_PREFERENCES,
   DIETARY_CONFIG,
 } from '../components/DietaryPreferencesModal';
+import { PersonalizeDrawer } from '../components/PersonalizeDrawer';
 import { OfflineBanner } from '../components/OfflineBanner';
 import {
   preloadTopProducts,
@@ -144,6 +145,11 @@ export default function Home() {
   const [profile, setProfile] = useState<UserProfile>(DEFAULT_HEALTH_PROFILE);
   const [isDisclaimerModalOpen, setIsDisclaimerModalOpen] = useState(false);
   const [pendingMedicalFlag, setPendingMedicalFlag] = useState<keyof UserProfile['medicalFlags'] | null>(null);
+  const [isPersonalizeOpen, setIsPersonalizeOpen] = useState(false);
+
+  const activeMedicalCount = Object.values(profile.medicalFlags || {}).filter(Boolean).length;
+  const activeDietaryCount = Object.values(profile.dietaryPreferences || {}).filter(Boolean).length;
+  const totalActiveFilters = activeMedicalCount + activeDietaryCount;
 
   // Load encrypted health profile from localStorage on mount
   useEffect(() => {
@@ -587,7 +593,7 @@ export default function Home() {
               <span className="text-base font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
                 NutriGrade <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 font-semibold border border-emerald-500/20">AI</span>
               </span>
-              <span className="text-[10px] text-slate-400 font-medium">Clinical Food Intelligence Platform</span>
+              <span className="text-[10px] text-slate-400 font-medium">Nutritional Quality &amp; Additive Analysis Engine</span>
             </div>
           </div>
 
@@ -651,11 +657,27 @@ export default function Home() {
 
       {/* 2. MAIN CONTENT AREA */}
       <main className="flex-1 max-w-6xl mx-auto w-full px-4 md:px-8 pt-8 space-y-8">
-        {/* HERO INTRO & MEDICAL PROFILE BAR */}
+        {/* HERO INTRO & PRIMARY SCANNER CARD (80/20 RULE) */}
         <section className="text-center space-y-6">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 text-xs font-semibold text-slate-600 dark:text-slate-300 shadow-sm">
-            <Sparkles className="w-4 h-4 text-emerald-500" />
-            <span>Clinical Nutritional Diagnostics &amp; Regulatory Verification</span>
+          <div className="flex flex-wrap items-center justify-between gap-3 max-w-2xl mx-auto">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 text-xs font-semibold text-slate-600 dark:text-slate-300 shadow-sm">
+              <Sparkles className="w-4 h-4 text-emerald-500" />
+              <span>Nutritional Quality Breakdown</span>
+            </div>
+
+            {/* Personalize My Scan Drawer Button */}
+            <button
+              onClick={() => setIsPersonalizeOpen(true)}
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 text-xs font-bold text-slate-700 dark:text-slate-200 shadow-md hover:bg-slate-50 dark:hover:bg-slate-800 transition-all active:scale-95"
+            >
+              <SlidersHorizontal className="w-3.5 h-3.5 text-emerald-500" />
+              <span>Personalize My Scan</span>
+              {totalActiveFilters > 0 && (
+                <span className="px-2 py-0.5 rounded-full bg-emerald-500 text-white font-bold text-[10px] shadow-sm">
+                  {totalActiveFilters} Active
+                </span>
+              )}
+            </button>
           </div>
 
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 dark:text-white max-w-3xl mx-auto leading-tight">
@@ -663,115 +685,42 @@ export default function Home() {
           </h1>
 
           <p className="text-base md:text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
-            Instant nutritional quality breakdown, additive toxicity screening, and marketing claim verification based on global health standards.
+            Instant food grade calculations, additive toxicity screening, and marketing claim verification based on Nutri-Score and NOVA standards.
           </p>
 
-          {/* GLOBAL TEXT SEARCH BAR */}
-          <div className="max-w-2xl mx-auto w-full pt-2">
+          {/* ━━━ PRIMARY CONVERSION AREA (80% FOCUS) ━━━ */}
+          <div className="max-w-2xl mx-auto w-full space-y-4 pt-2">
+            <UploadZone
+              onFileSelected={handleFileSelected}
+              onDualFilesSelected={handleDualFilesSelected}
+              onSelectSample={loadDemoSample}
+              onBarcodeSubmitted={handleBarcodeSubmitted}
+              isAnalyzing={isAnalyzing}
+              error={error}
+            />
+
+            {/* INTEGRATED GLOBAL SEARCH BAR */}
             <GlobalSearchBar onSelectProduct={handleProductSelectedFromSearch} />
-          </div>
 
-          {/* Interactive Medical Profile Bar */}
-          <div className="p-4 rounded-3xl backdrop-blur-xl bg-white/60 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800/60 shadow-lg max-w-xl mx-auto space-y-3">
-            <div className="flex items-center justify-between text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-              <span className="flex items-center gap-1.5">
-                <HeartPulse className="w-4 h-4 text-rose-500" />
-                Personal Medical Profile Overlay
-              </span>
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={handleClearHealthData}
-                  className="text-[11px] text-rose-500 hover:text-rose-600 dark:hover:text-rose-400 font-bold flex items-center gap-1 transition-colors normal-case"
-                  title="Wipe local encrypted health profile data"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                  <span>Clear Health Data</span>
-                </button>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              {[
-                { key: 'isDiabetic', label: 'Diabetic' },
-                { key: 'hasHypertension', label: 'Hypertension' },
-                { key: 'isCeliac', label: 'Celiac' },
-                { key: 'lowSodiumDiet', label: 'Low Sodium' },
-              ].map(({ key, label }) => {
-                const isActive = profile.medicalFlags[key as keyof UserProfile['medicalFlags']];
-
-                return (
-                  <button
-                    key={key}
-                    onClick={() => toggleMedicalFlag(key as keyof UserProfile['medicalFlags'])}
-                    className={`py-2 px-3 rounded-2xl text-xs font-semibold flex items-center justify-center gap-2 transition-all border ${
-                      isActive
-                        ? 'bg-emerald-500 text-white border-emerald-500 shadow-md shadow-emerald-500/20'
-                        : 'bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-400 border-slate-200/60 dark:border-slate-700/60 hover:bg-slate-200 dark:hover:bg-slate-700'
-                    }`}
-                  >
-                    {isActive && <Check className="w-3.5 h-3.5" />}
-                    <span>{label}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Standard Dietary Compatibility Engine Selector */}
-          <div className="p-4 rounded-3xl backdrop-blur-xl bg-white/60 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800/60 shadow-lg max-w-xl mx-auto space-y-3">
-            <div className="flex items-center justify-between text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-              <span className="flex items-center gap-1.5">
-                <Leaf className="w-4 h-4 text-emerald-500" />
-                Standard Dietary Compatibility Engine
-              </span>
+            {/* SECONDARY QUICK TEST CHIPS */}
+            <div className="flex flex-wrap items-center justify-center gap-2 pt-1 text-xs">
+              <span className="font-semibold text-slate-400">Quick Test:</span>
               <button
-                onClick={() => setIsDietaryModalOpen(true)}
-                className="text-emerald-500 hover:underline flex items-center gap-1 text-xs font-bold"
+                onClick={() => loadDemoSample('oats')}
+                className="px-3.5 py-1.5 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-semibold border border-emerald-500/20 transition-all flex items-center gap-1.5"
               >
-                <SlidersHorizontal className="w-3.5 h-3.5" />
-                Configure ({Object.values(profile.dietaryPreferences || {}).filter(Boolean).length} Active)
+                <span>Organic Rolled Oats</span>
+                <span className="text-[10px] px-1.5 py-0.2 rounded bg-emerald-500 text-white font-bold">A</span>
+              </button>
+              <button
+                onClick={() => loadDemoSample('chocolate_milk')}
+                className="px-3.5 py-1.5 rounded-full bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 font-semibold border border-rose-500/20 transition-all flex items-center gap-1.5"
+              >
+                <span>Sugary Soda / Chocolate Milk</span>
+                <span className="text-[10px] px-1.5 py-0.2 rounded bg-rose-500 text-white font-bold">E</span>
               </button>
             </div>
-
-            {/* Quick Dietary Preference Toggle Pills */}
-            <div className="flex flex-wrap gap-1.5">
-              {DIETARY_CONFIG.map((item) => {
-                const isActive = profile.dietaryPreferences?.[item.key] || false;
-                return (
-                  <button
-                    key={item.key}
-                    onClick={() => {
-                      const updated = {
-                        ...(profile.dietaryPreferences || DEFAULT_DIETARY_PREFERENCES),
-                        [item.key]: !isActive,
-                      };
-                      updateDietaryPreferences(updated);
-                    }}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all border ${
-                      isActive
-                        ? 'bg-emerald-500 text-white border-emerald-500 shadow-md shadow-emerald-500/20'
-                        : 'bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-400 border-slate-200/60 dark:border-slate-700/60 hover:bg-slate-200 dark:hover:bg-slate-700'
-                    }`}
-                  >
-                    {isActive && <Check className="w-3.5 h-3.5" />}
-                    <span>{item.title}</span>
-                  </button>
-                );
-              })}
-            </div>
           </div>
-        </section>
-
-        {/* 3. UPLOAD & BARCODE SCANNER SECTION */}
-        <section className="space-y-4">
-          <UploadZone
-            onFileSelected={handleFileSelected}
-            onDualFilesSelected={handleDualFilesSelected}
-            onSelectSample={loadDemoSample}
-            onBarcodeSubmitted={handleBarcodeSubmitted}
-            isAnalyzing={isAnalyzing}
-            error={error}
-          />
         </section>
 
         {/* 4. DUAL-SCAN MARKETING AUDIT CARD (Only appears after dual-scan) */}
@@ -810,20 +759,14 @@ export default function Home() {
       {/* SCAN HISTORY SLIDE-OVER DRAWER */}
       <ScanHistory isOpen={isHistoryOpen} onClose={() => setIsHistoryOpen(false)} />
 
-      {/* CLINICAL DISCLAIMER CONSENT MODAL */}
-      <MedicalDisclaimerModal
-        isOpen={isDisclaimerModalOpen}
-        onAccept={handleAcceptDisclaimer}
-        onDecline={handleDeclineDisclaimer}
-        pendingConditionName={pendingMedicalFlag ? pendingMedicalFlag.replace('is', '').replace('has', '') : undefined}
-      />
-
-      {/* DIETARY PREFERENCES MODAL */}
-      <DietaryPreferencesModal
+      {/* PERSONALIZE MY SCAN SLIDING SHEET DRAWER */}
+      <PersonalizeDrawer
+        isOpen={isPersonalizeOpen}
+        onClose={() => setIsPersonalizeOpen(false)}
         profile={profile}
-        onUpdatePreferences={updateDietaryPreferences}
-        isOpen={isDietaryModalOpen}
-        onClose={() => setIsDietaryModalOpen(false)}
+        onToggleMedicalFlag={toggleMedicalFlag}
+        onUpdateDietaryPreferences={updateDietaryPreferences}
+        onClearHealthData={handleClearHealthData}
       />
     </div>
   );

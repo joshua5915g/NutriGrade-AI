@@ -579,19 +579,19 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
               }`}
             >
               <div className="relative mb-5">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-emerald-500/20 to-teal-500/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shadow-inner">
-                  <Upload className="w-8 h-8" />
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-600 flex items-center justify-center text-white shadow-lg shadow-emerald-500/25">
+                  <Camera className="w-8 h-8" />
                 </div>
                 <div className="absolute -bottom-1 -right-1 p-1.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-teal-500 shadow-md">
-                  <ImageIcon className="w-3.5 h-3.5" />
+                  <Sparkles className="w-3.5 h-3.5" />
                 </div>
               </div>
 
-              <h3 className="text-lg md:text-xl font-semibold text-slate-900 dark:text-white tracking-tight">
-                Scan Barcode or Upload Food Label
+              <h3 className="text-xl md:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+                Take Photo or Upload Packaging
               </h3>
               <p className="mt-1.5 text-sm text-slate-500 dark:text-slate-400 max-w-sm">
-                Drag and drop your food packaging image or PDF here, or click to browse.
+                Instant label analysis via camera or gallery
               </p>
 
               <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
@@ -599,29 +599,28 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    fileInputRef.current?.click();
+                    setIsLiveScannerOpen(true);
                   }}
-                  className="px-5 py-2.5 rounded-full bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 text-sm font-medium transition-all shadow-md active:scale-95"
+                  className="px-6 py-3 rounded-full bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-white text-sm font-bold shadow-xl shadow-emerald-500/25 transition-all active:scale-95 flex items-center gap-2"
                 >
-                  Browse Files
+                  <Camera className="w-4 h-4" />
+                  <span>Take Photo / Scan Package</span>
                 </button>
                 <button
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    setIsLiveScannerOpen(true);
+                    fileInputRef.current?.click();
                   }}
-                  className="px-5 py-2.5 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-sm font-medium transition-all border border-slate-200 dark:border-slate-700 flex items-center gap-2 active:scale-95"
+                  className="px-5 py-3 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-sm font-semibold transition-all border border-slate-200 dark:border-slate-700 flex items-center gap-2 active:scale-95"
                 >
-                  <Camera className="w-4 h-4 text-emerald-500" />
-                  <span>Live Camera Scanner</span>
+                  <Upload className="w-4 h-4 text-emerald-500" />
+                  <span>Browse Gallery</span>
                 </button>
               </div>
 
-              {onSelectSample && <SampleDemos onSelectSample={onSelectSample} />}
-
               <span className="mt-4 text-[11px] text-slate-400 dark:text-slate-500">
-                Supports Mobile JPEG, PNG, WebP up to 15MB (Fast Canvas Pre-Processing)
+                Supports Mobile JPEG, PNG, WebP (Fast Canvas Pre-Processing)
               </span>
             </motion.div>
           )}

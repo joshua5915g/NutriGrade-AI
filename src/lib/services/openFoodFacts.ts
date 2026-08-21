@@ -135,7 +135,7 @@ export async function fetchByBarcode(
     const url = `https://world.openfoodfacts.org/api/v2/product/${cleanBarcode}.json`;
     const res = await fetch(url, {
       headers: {
-        'User-Agent': 'NutriGradeAI - Clinical Food Intelligence Platform - WebApp',
+        'User-Agent': 'NutriGradeAI - Nutritional Quality & Additive Analysis Engine - WebApp',
       },
     });
 

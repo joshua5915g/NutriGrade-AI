@@ -34,7 +34,7 @@ const CATEGORIES = [
 export const GlobalSearchBar: React.FC<GlobalSearchBarProps> = ({
   onSelectProduct,
   className = '',
-  placeholder = 'Search any food product by name, brand, or category (e.g., Nutella, Oats, Greek Yogurt)...',
+  placeholder = 'Search products by name or brand (e.g., Oats, Soda, Greek Yogurt)...',
 }) => {
   const [query, setQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
@@ -239,8 +239,9 @@ export const GlobalSearchBar: React.FC<GlobalSearchBarProps> = ({
             </button>
           )}
 
-          <div className="hidden sm:flex items-center gap-1 px-2 py-1 rounded-lg bg-slate-100 dark:bg-slate-800/80 border border-slate-200/60 dark:border-slate-700/60 text-[10px] font-semibold text-slate-400 dark:text-slate-500">
-            <span>OFF Search</span>
+          <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800/80 border border-slate-200/60 dark:border-slate-700/60 text-[10px] font-semibold text-slate-500 dark:text-slate-400">
+            <Search className="w-3 h-3 text-emerald-500" />
+            <span>Search Database</span>
           </div>
         </div>
       </div>
