@@ -14,7 +14,7 @@
   }
 
   body {
-    @apply bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen antialiased selection:bg-emerald-500 selection:text-white;
+    @apply bg-slate-50 dark:bg-brand-darkBg text-slate-900 dark:text-slate-100 min-h-screen antialiased selection:bg-brand-lime selection:text-brand-darkBg;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
