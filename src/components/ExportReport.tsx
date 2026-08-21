@@ -238,7 +238,7 @@ export const ExportReport: React.FC<ExportReportProps> = ({
                 NutriGrade <span style={{ fontSize: '14px', background: '#10b981', padding: '2px 10px', borderRadius: '20px', marginLeft: '8px' }}>AI</span>
               </div>
               <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '4px' }}>
-                Enterprise Food Nutrition Analysis Report
+                Clinical Food Nutrition Analysis Report
               </div>
             </div>
             <div style={{ fontSize: '11px', color: '#64748b', textAlign: 'right' }}>

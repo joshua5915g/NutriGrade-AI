@@ -20,7 +20,7 @@ export interface UserGoals {
 
 /**
  * DietaryPreferences represents lifestyle choices and ingredient restrictions
- * (Yuka-style preferences such as Vegan, Palm-Oil-Free, Pork-Free, etc.).
+ * (Standard Dietary Compatibility Engine preferences such as Vegan, Palm-Oil-Free, Pork-Free, etc.).
  */
 export interface DietaryPreferences {
   palmOilFree: boolean;
@@ -53,7 +53,7 @@ export interface UserProfile {
     lowSodiumDiet: boolean;
   };
 
-  /** Yuka-style lifestyle and dietary preference filters */
+  /** Standard Dietary Compatibility Engine preference filters */
   dietaryPreferences?: DietaryPreferences;
   
   /** Personal target thresholds for dietary tracking */

@@ -275,7 +275,7 @@ export const GlobalSearchBar: React.FC<GlobalSearchBarProps> = ({
               <div className="p-8 text-center space-y-3">
                 <Loader2 className="w-8 h-8 text-emerald-500 animate-spin mx-auto" />
                 <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
-                  Searching Open Food Facts global database...
+                  Searching global regulatory food database...
                 </p>
               </div>
             ) : error ? (

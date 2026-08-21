@@ -53,10 +53,10 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
       <div className="flex items-center justify-between">
         <span className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 flex items-center gap-2">
           <Barcode className="w-4 h-4 text-emerald-500" />
-          Direct Barcode Lookup (Open Food Facts Database)
+          Direct Regulatory Barcode Lookup
         </span>
         <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 font-semibold border border-emerald-500/20">
-          Fast Layer (&lt;100ms)
+          Instant Verification (&lt;100ms)
         </span>
       </div>
 

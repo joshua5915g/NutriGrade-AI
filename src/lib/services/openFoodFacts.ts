@@ -97,8 +97,8 @@ export function mapOffProductToSearchResult(product: any): SearchProductResult {
     nutriScore,
     novaGroup,
     additives,
-    healthWarnings: novaGroup === 4 ? ['Ultra-processed food item detected via Open Food Facts database'] : [],
-    explanation: `Verified product data for "${productName}" (${brand}) retrieved from Open Food Facts. Nutri-Score Grade ${nutriScore.grade} (${nutriScore.score} points).`,
+    healthWarnings: novaGroup === 4 ? ['Ultra-processed formulation detected under official NOVA Group 4 classification metrics.'] : [],
+    explanation: `Product profile for "${productName}" (${brand}) evaluates to Nutri-Score Grade ${nutriScore.grade} (${nutriScore.score} points) under European nutritional standards.`,
     ...bioIntel,
   };
 
@@ -135,7 +135,7 @@ export async function fetchByBarcode(
     const url = `https://world.openfoodfacts.org/api/v2/product/${cleanBarcode}.json`;
     const res = await fetch(url, {
       headers: {
-        'User-Agent': 'NutriGradeAI - Enterprise Food Analyzer - WebApp',
+        'User-Agent': 'NutriGradeAI - Clinical Food Intelligence Platform - WebApp',
       },
     });
 

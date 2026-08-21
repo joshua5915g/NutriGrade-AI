@@ -28,6 +28,7 @@ import { FopNutritionBox } from './FopNutritionBox';
 import { FavoriteButton } from './FavoriteButton';
 import { detectSeedOils } from '../lib/algorithms/seedOilRadar';
 import { calculateFdaFop } from '../lib/algorithms/fdaFopSimulator';
+import { MedicalDisclaimerBanner } from './MedicalDisclaimer';
 
 interface NutritionDashboardProps {
   analysis: AnalysisResult;
@@ -406,8 +407,8 @@ export const NutritionDashboard: React.FC<NutritionDashboardProps> = ({
             </span>
             <h3 className="text-lg font-bold tracking-tight">{novaInfo.title}</h3>
           </div>
-          <span className="text-xs font-mono px-3 py-1 rounded-full bg-white/50 dark:bg-black/30 backdrop-blur-md">
-            NOVA System
+          <span className="text-xs font-semibold px-3 py-1 rounded-full bg-white/50 dark:bg-black/30 backdrop-blur-md" title="Ultra-Processing Classification (University of São Paulo / FAO)">
+            Ultra-Processing Classification (University of São Paulo / FAO)
           </span>
         </div>
         <p className="text-sm opacity-90 leading-relaxed ml-11">{novaInfo.desc}</p>
@@ -475,6 +476,9 @@ export const NutritionDashboard: React.FC<NutritionDashboardProps> = ({
           </div>
         </div>
       )}
+
+      {/* 10. CLINICAL DISCLAIMER BANNER */}
+      <MedicalDisclaimerBanner variant="full" />
     </motion.div>
   );
 };

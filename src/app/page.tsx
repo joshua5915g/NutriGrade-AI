@@ -16,7 +16,21 @@ import {
   SlidersHorizontal,
   Leaf,
   ShoppingCart,
+  Trash2,
+  Lock,
 } from 'lucide-react';
+import {
+  loadUserHealthProfile,
+  saveUserHealthProfile,
+  clearAllHealthData,
+  hasAcceptedMedicalDisclaimer,
+  setAcceptedMedicalDisclaimer,
+  DEFAULT_HEALTH_PROFILE,
+} from '../lib/storage/userHealthStore';
+import {
+  MedicalDisclaimerBanner,
+  MedicalDisclaimerModal,
+} from '../components/MedicalDisclaimer';
 
 import { RawNutritionData, AnalysisResult, SearchProductResult } from '../types/nutrition';
 import { UserProfile, PersonalizedAnalysis, DietaryPreferences } from '../types/user';
@@ -127,21 +141,15 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
 
   // User Profile Medical Flags & Dietary Preferences State
-  const [profile, setProfile] = useState<UserProfile>({
-    medicalFlags: {
-      isDiabetic: true,
-      hasHypertension: true,
-      isCeliac: false,
-      lowSodiumDiet: false,
-    },
-    dietaryPreferences: DEFAULT_DIETARY_PREFERENCES,
-    goals: {
-      targetCaloriesPerDay: 2000,
-      maxSodiumPerDayMg: 2000,
-      maxSugarPerDayG: 30,
-      weightGoal: 'maintain',
-    },
-  });
+  const [profile, setProfile] = useState<UserProfile>(DEFAULT_HEALTH_PROFILE);
+  const [isDisclaimerModalOpen, setIsDisclaimerModalOpen] = useState(false);
+  const [pendingMedicalFlag, setPendingMedicalFlag] = useState<keyof UserProfile['medicalFlags'] | null>(null);
+
+  // Load encrypted health profile from localStorage on mount
+  useEffect(() => {
+    const loaded = loadUserHealthProfile();
+    setProfile(loaded);
+  }, []);
 
   const [isDietaryModalOpen, setIsDietaryModalOpen] = useState(false);
 
@@ -223,14 +231,27 @@ export default function Home() {
     document.documentElement.classList.toggle('dark');
   };
 
-  // Toggle user medical condition flags
+  // Toggle user medical condition flags with disclaimer verification
   const toggleMedicalFlag = (key: keyof UserProfile['medicalFlags']) => {
+    const willEnable = !profile.medicalFlags[key];
+
+    if (willEnable && !hasAcceptedMedicalDisclaimer()) {
+      setPendingMedicalFlag(key);
+      setIsDisclaimerModalOpen(true);
+      return;
+    }
+
+    applyMedicalFlagToggle(key);
+  };
+
+  const applyMedicalFlagToggle = (key: keyof UserProfile['medicalFlags']) => {
     const updatedFlags = {
       ...profile.medicalFlags,
       [key]: !profile.medicalFlags[key],
     };
     const updatedProfile = { ...profile, medicalFlags: updatedFlags };
     setProfile(updatedProfile);
+    saveUserHealthProfile(updatedProfile);
 
     // Re-apply personalized overlay dynamically if analysis is active
     if (currentAnalysis) {
@@ -246,10 +267,44 @@ export default function Home() {
     }
   };
 
-  // Update Yuka-Style Dietary Preferences
+  const handleAcceptDisclaimer = () => {
+    setAcceptedMedicalDisclaimer(true);
+    setIsDisclaimerModalOpen(false);
+
+    if (pendingMedicalFlag) {
+      applyMedicalFlagToggle(pendingMedicalFlag);
+      setPendingMedicalFlag(null);
+    }
+  };
+
+  const handleDeclineDisclaimer = () => {
+    setIsDisclaimerModalOpen(false);
+    setPendingMedicalFlag(null);
+  };
+
+  const handleClearHealthData = () => {
+    if (typeof window !== 'undefined' && window.confirm('Wipe all local encrypted health profile data and reset medical condition flags?')) {
+      clearAllHealthData();
+      setProfile(DEFAULT_HEALTH_PROFILE);
+      if (currentAnalysis) {
+        const updatedPersonalized = applyPersonalOverlay(
+          currentAnalysis.analysis,
+          DEFAULT_HEALTH_PROFILE,
+          currentIngredients
+        );
+        setCurrentAnalysis({
+          ...currentAnalysis,
+          personalized: updatedPersonalized,
+        });
+      }
+    }
+  };
+
+  // Update Standard Dietary Compatibility Engine Preferences
   const updateDietaryPreferences = (updatedPrefs: DietaryPreferences) => {
     const updatedProfile = { ...profile, dietaryPreferences: updatedPrefs };
     setProfile(updatedProfile);
+    saveUserHealthProfile(updatedProfile);
 
     if (currentAnalysis) {
       const updatedPersonalized = applyPersonalOverlay(
@@ -476,7 +531,7 @@ export default function Home() {
         await addToOfflineQueue(barcode);
         const queue = await getOfflineQueue();
         setQueuedCount(queue.length);
-        setError(err.message || 'Unable to resolve product by barcode. Queued for offline sync.');
+        setError("We couldn't get a clear reading of the label. Please retake the photo with better lighting or type the product name above.");
       }
     } finally {
       setIsAnalyzing(false);
@@ -532,7 +587,7 @@ export default function Home() {
               <span className="text-base font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
                 NutriGrade <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 font-semibold border border-emerald-500/20">AI</span>
               </span>
-              <span className="text-[10px] text-slate-400 font-medium">Enterprise Food Analyzer</span>
+              <span className="text-[10px] text-slate-400 font-medium">Clinical Food Intelligence Platform</span>
             </div>
           </div>
 
@@ -600,18 +655,15 @@ export default function Home() {
         <section className="text-center space-y-6">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 text-xs font-semibold text-slate-600 dark:text-slate-300 shadow-sm">
             <Sparkles className="w-4 h-4 text-emerald-500" />
-            <span>Dual-Layer Pipeline: Open Food Facts Database + Gemini Vision AI OCR</span>
+            <span>Clinical Nutritional Diagnostics &amp; Regulatory Verification</span>
           </div>
 
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 dark:text-white max-w-3xl mx-auto leading-tight">
-            Know What You Eat. <br className="hidden md:block" />
-            <span className="bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-500 bg-clip-text text-transparent">
-              Backed by Science.
-            </span>
+            Know What’s Really in Your Food.
           </h1>
 
           <p className="text-base md:text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
-            Search any food product by name or brand, scan barcode, upload a single label, or use dual-scan mode to cross-verify front marketing claims against back nutrition facts.
+            Instant nutritional quality breakdown, additive toxicity screening, and marketing claim verification based on global health standards.
           </p>
 
           {/* GLOBAL TEXT SEARCH BAR */}
@@ -626,7 +678,16 @@ export default function Home() {
                 <HeartPulse className="w-4 h-4 text-rose-500" />
                 Personal Medical Profile Overlay
               </span>
-              <span>Select Active Conditions</span>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={handleClearHealthData}
+                  className="text-[11px] text-rose-500 hover:text-rose-600 dark:hover:text-rose-400 font-bold flex items-center gap-1 transition-colors normal-case"
+                  title="Wipe local encrypted health profile data"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>Clear Health Data</span>
+                </button>
+              </div>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -656,12 +717,12 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Yuka-Style Lifestyle Dietary Preferences Selector */}
+          {/* Standard Dietary Compatibility Engine Selector */}
           <div className="p-4 rounded-3xl backdrop-blur-xl bg-white/60 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800/60 shadow-lg max-w-xl mx-auto space-y-3">
             <div className="flex items-center justify-between text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
               <span className="flex items-center gap-1.5">
                 <Leaf className="w-4 h-4 text-emerald-500" />
-                Yuka Dietary Preference Filters
+                Standard Dietary Compatibility Engine
               </span>
               <button
                 onClick={() => setIsDietaryModalOpen(true)}
@@ -740,12 +801,24 @@ export default function Home() {
             />
           </section>
         )}
+        {/* 6. FOOTER CLINICAL DISCLAIMER BANNER */}
+        <section className="pt-6">
+          <MedicalDisclaimerBanner variant="full" />
+        </section>
       </main>
 
       {/* SCAN HISTORY SLIDE-OVER DRAWER */}
       <ScanHistory isOpen={isHistoryOpen} onClose={() => setIsHistoryOpen(false)} />
 
-      {/* YUKA DIETARY PREFERENCES MODAL */}
+      {/* CLINICAL DISCLAIMER CONSENT MODAL */}
+      <MedicalDisclaimerModal
+        isOpen={isDisclaimerModalOpen}
+        onAccept={handleAcceptDisclaimer}
+        onDecline={handleDeclineDisclaimer}
+        pendingConditionName={pendingMedicalFlag ? pendingMedicalFlag.replace('is', '').replace('has', '') : undefined}
+      />
+
+      {/* DIETARY PREFERENCES MODAL */}
       <DietaryPreferencesModal
         profile={profile}
         onUpdatePreferences={updateDietaryPreferences}

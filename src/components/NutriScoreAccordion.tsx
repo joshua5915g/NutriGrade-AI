@@ -61,14 +61,17 @@ export const NutriScoreAccordion: React.FC<NutriScoreAccordionProps> = ({
             <Calculator className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-base md:text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <h3 className="text-base md:text-lg font-bold text-slate-900 dark:text-white flex flex-wrap items-center gap-2">
               Nutri-Score Calculation Breakdown
-              <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/20" title="Official European Standard (Santé Publique France)">
+                Official European Standard (Santé Publique France)
+              </span>
+              <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-slate-500/10 text-slate-500 border border-slate-500/20">
                 Score: {score}
               </span>
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              Mathematical point breakdown of negative nutrients (N) vs. positive nutrients (P)
+              Mathematical point breakdown of negative nutrients (N) vs. positive nutrients (P) based on official Santé Publique France algorithms.
             </p>
           </div>
         </div>

@@ -21,6 +21,8 @@ import {
 
 import { SampleDemos, SampleType } from './SampleDemos';
 import { BarcodeScanner } from './BarcodeScanner';
+import { LiveCameraScanner } from './LiveCameraScanner';
+import { compressAndEnhanceImage } from '../lib/utils/imageCompressor';
 
 interface UploadZoneProps {
   onFileSelected: (file: File) => void;
@@ -53,21 +55,25 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
   const [frontPreview, setFrontPreview] = useState<string | null>(null);
   const [backPreview, setBackPreview] = useState<string | null>(null);
 
+  // Live Camera Scanner Modal State
+  const [isLiveScannerOpen, setIsLiveScannerOpen] = useState(false);
+  const [cameraTarget, setCameraTarget] = useState<'single' | 'front' | 'back'>('single');
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const frontInputRef = useRef<HTMLInputElement>(null);
   const backInputRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
 
-  // Validate file before processing
+  // Validate file before processing (image formats restricted, PDFs deprecated for food scans)
   const validateFile = (file: File): boolean => {
-    const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
-    if (!allowedTypes.includes(file.type)) {
-      alert('Unsupported file format. Please upload a JPEG, PNG, or PDF file.');
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!allowedTypes.includes(file.type) && !file.type.startsWith('image/')) {
+      alert('Unsupported format. Please capture or upload a JPEG, PNG, or WebP food label image.');
       return false;
     }
-    if (file.size > 10 * 1024 * 1024) {
-      alert('File size exceeds 10MB limit.');
+    if (file.size > 15 * 1024 * 1024) {
+      alert('File size exceeds 15MB limit.');
       return false;
     }
     return true;
@@ -87,14 +93,15 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
   }, []);
 
   const processFile = useCallback(
-    (file: File) => {
+    async (file: File) => {
       if (!validateFile(file)) return;
 
-      setSelectedFile(file);
-      onFileSelected(file);
+      const optimizedFile = await compressAndEnhanceImage(file);
+      setSelectedFile(optimizedFile);
+      onFileSelected(optimizedFile);
 
-      if (file.type.startsWith('image/')) {
-        setPreviewUrl(URL.createObjectURL(file));
+      if (optimizedFile.type.startsWith('image/')) {
+        setPreviewUrl(URL.createObjectURL(optimizedFile));
       } else {
         setPreviewUrl(null);
       }
@@ -122,24 +129,26 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
   };
 
   // Dual-scan file handlers
-  const handleFrontFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFrontFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
       if (!validateFile(file)) return;
-      setFrontFile(file);
-      if (file.type.startsWith('image/')) {
-        setFrontPreview(URL.createObjectURL(file));
+      const optimized = await compressAndEnhanceImage(file);
+      setFrontFile(optimized);
+      if (optimized.type.startsWith('image/')) {
+        setFrontPreview(URL.createObjectURL(optimized));
       }
     }
   };
 
-  const handleBackFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleBackFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
       if (!validateFile(file)) return;
-      setBackFile(file);
-      if (file.type.startsWith('image/')) {
-        setBackPreview(URL.createObjectURL(file));
+      const optimized = await compressAndEnhanceImage(file);
+      setBackFile(optimized);
+      if (optimized.type.startsWith('image/')) {
+        setBackPreview(URL.createObjectURL(optimized));
       }
     }
   };
@@ -226,21 +235,21 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
         type="file"
         ref={fileInputRef}
         onChange={handleFileChange}
-        accept="image/jpeg,image/png,application/pdf"
+        accept="image/jpeg,image/png,image/webp"
         className="hidden"
       />
       <input
         type="file"
         ref={frontInputRef}
         onChange={handleFrontFileChange}
-        accept="image/jpeg,image/png,application/pdf"
+        accept="image/jpeg,image/png,image/webp"
         className="hidden"
       />
       <input
         type="file"
         ref={backInputRef}
         onChange={handleBackFileChange}
-        accept="image/jpeg,image/png,application/pdf"
+        accept="image/jpeg,image/png,image/webp"
         className="hidden"
       />
 
@@ -600,19 +609,19 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    startCamera();
+                    setIsLiveScannerOpen(true);
                   }}
                   className="px-5 py-2.5 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-sm font-medium transition-all border border-slate-200 dark:border-slate-700 flex items-center gap-2 active:scale-95"
                 >
                   <Camera className="w-4 h-4 text-emerald-500" />
-                  <span>Open Camera</span>
+                  <span>Live Camera Scanner</span>
                 </button>
               </div>
 
               {onSelectSample && <SampleDemos onSelectSample={onSelectSample} />}
 
               <span className="mt-4 text-[11px] text-slate-400 dark:text-slate-500">
-                Supports JPEG, PNG, PDF up to 10MB
+                Supports Mobile JPEG, PNG, WebP up to 15MB (Fast Canvas Pre-Processing)
               </span>
             </motion.div>
           )}
@@ -626,6 +635,13 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
           </div>
         )}
       </div>
+
+      {/* Interactive Mobile Camera Scanner Modal */}
+      <LiveCameraScanner
+        isOpen={isLiveScannerOpen}
+        onClose={() => setIsLiveScannerOpen(false)}
+        onCapture={(capturedFile) => processFile(capturedFile)}
+      />
     </div>
   );
 };

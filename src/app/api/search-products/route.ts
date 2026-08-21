@@ -87,7 +87,7 @@ export async function GET(req: NextRequest) {
     // 3. Query OFF API
     const res = await fetch(offUrl, {
       headers: {
-        'User-Agent': 'NutriGradeAI - Enterprise Food Analyzer - WebApp',
+        'User-Agent': 'NutriGradeAI - Clinical Food Intelligence Platform - WebApp',
       },
       next: { revalidate: 300 },
     });

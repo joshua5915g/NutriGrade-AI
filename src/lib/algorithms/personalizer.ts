@@ -18,7 +18,7 @@ const GLUTEN_KEYWORDS = [
 
 /**
  * Applies a personalized medical and nutritional overlay on top of standard AnalysisResult.
- * Evaluates diabetic sugar limits, hypertension sodium limits, celiac gluten, and Yuka-style dietary preferences.
+ * Evaluates diabetic sugar limits, hypertension sodium limits, celiac gluten, and Standard Dietary Compatibility Engine preferences.
  *
  * @param analysis - Consolidated food analysis output (Normalized nutrition, Nutri-Score, NOVA)
  * @param profile - User profile containing medical flags, dietary preferences, and daily goals
@@ -92,7 +92,7 @@ export function applyPersonalOverlay(
     }
   }
 
-  // 4. Check Yuka-Style Dietary Preferences Audit
+  // 4. Check Standard Dietary Compatibility Engine Preferences Audit
   const additiveIdentifiers = (analysis.additives || []).flatMap((a) => [
     a.eNumber,
     a.commonName,

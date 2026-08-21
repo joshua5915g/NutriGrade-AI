@@ -3,9 +3,9 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'NutriGrade AI - Enterprise Food Nutrition Analyzer',
+  title: 'NutriGrade AI - Clinical Food Nutrition Intelligence Platform',
   description:
-    'AI-powered multimodal food nutrition grader, Nutri-Score calculator, NOVA ultra-processing detector, and personalized health warning system.',
+    'Clinical-grade multimodal food nutrition grader, Nutri-Score calculator, NOVA ultra-processing detector, and personalized health warning system.',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,

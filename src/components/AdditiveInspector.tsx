@@ -65,18 +65,16 @@ export const AdditiveInspector: React.FC<AdditiveInspectorProps> = ({ additives 
             <Activity className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white flex flex-wrap items-center gap-2">
               Additive Hazard Inspector ({additives.length})
-              {additives.length > 0 && (
-                <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-500 border border-indigo-500/20">
-                  Interactive Dossier
-                </span>
-              )}
+              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-500 border border-indigo-500/20" title="Toxicological Hazard Dossier (EFSA / WHO Joint Expert Committee on Food Additives)">
+                Toxicological Hazard Dossier (EFSA / WHO Joint Expert Committee on Food Additives)
+              </span>
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400">
               {additives.length === 0
-                ? 'Clean ingredient list free of chemical E-numbers'
-                : `${additives.length} additive(s) detected. Click any item to inspect WHO/EFSA safety notes.`}
+                ? 'Clean ingredient list free of chemical E-numbers based on EFSA/WHO safety criteria'
+                : `${additives.length} additive(s) detected. Click any item to inspect Toxicological Hazard Dossier (EFSA / WHO Joint Expert Committee on Food Additives) safety notes.`}
             </p>
           </div>
         </div>

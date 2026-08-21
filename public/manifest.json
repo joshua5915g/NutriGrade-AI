@@ -1,7 +1,7 @@
 {
-  "name": "NutriGrade AI — Enterprise Food Analyzer",
+  "name": "NutriGrade AI — Clinical Food Intelligence Platform",
   "short_name": "NutriGrade",
-  "description": "AI-powered food nutrition analyzer with Nutri-Score, NOVA classification, and health profile overlays.",
+  "description": "Clinical-grade food nutrition analyzer with Nutri-Score, NOVA classification, and health profile overlays.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0f172a",
