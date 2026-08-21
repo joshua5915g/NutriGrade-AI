@@ -296,7 +296,7 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
       </div>
 
       {/* ━━━ MAIN UPLOAD CARD ━━━ */}
-      <div className="relative overflow-hidden rounded-3xl backdrop-blur-xl bg-white/70 dark:bg-slate-900/70 border border-slate-200/60 dark:border-slate-800/60 shadow-2xl transition-all duration-300">
+      <div className="relative overflow-hidden rounded-3xl backdrop-blur-xl bg-white/80 dark:bg-brand-darkCard/90 border border-slate-200/60 dark:border-brand-cream/20 shadow-2xl transition-all duration-300">
         <AnimatePresence mode="wait">
           {/* ════════════════════ DUAL SCAN MODE ════════════════════ */}
           {isDualMode ? (
@@ -310,10 +310,10 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
               {/* Title */}
               <div className="text-center space-y-1.5">
                 <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center justify-center gap-2">
-                  <Layers className="w-5 h-5 text-violet-500" />
+                  <Layers className="w-5 h-5 text-brand-lime" />
                   Dual-Image Cross-Verification Scan
                 </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 max-w-md mx-auto">
+                <p className="text-xs text-slate-500 dark:text-brand-cream/80 max-w-md mx-auto">
                   Upload the front packaging (marketing claims) and back label (nutrition facts) for an AI-powered regulatory cross-check audit.
                 </p>
               </div>
@@ -325,8 +325,8 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
                   onClick={() => frontInputRef.current?.click()}
                   className={`relative rounded-2xl border-2 border-dashed p-5 flex flex-col items-center justify-center text-center cursor-pointer transition-all min-h-[200px] group ${
                     frontFile
-                      ? 'border-violet-500/40 bg-violet-500/5'
-                      : 'border-slate-300/80 dark:border-slate-700/80 hover:border-violet-500/60 hover:bg-violet-500/5'
+                      ? 'border-brand-lime/50 bg-brand-lime/10'
+                      : 'border-slate-300/80 dark:border-brand-cream/20 hover:border-brand-lime/60 hover:bg-brand-lime/5'
                   }`}
                 >
                   {frontPreview ? (
@@ -352,20 +352,20 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
                     </div>
                   ) : (
                     <>
-                      <div className="w-12 h-12 rounded-2xl bg-violet-500/10 flex items-center justify-center text-violet-500 mb-3 group-hover:scale-110 transition-transform">
+                      <div className="w-12 h-12 rounded-2xl bg-brand-lime/15 flex items-center justify-center text-brand-lime mb-3 group-hover:scale-110 transition-transform">
                         <Package className="w-6 h-6" />
                       </div>
-                      <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+                      <span className="text-sm font-semibold text-slate-700 dark:text-brand-cream">
                         Front of Package
                       </span>
-                      <span className="text-[11px] text-slate-400 mt-1">
+                      <span className="text-[11px] text-slate-400 dark:text-slate-500 mt-1">
                         Marketing claims & branding
                       </span>
                     </>
                   )}
 
                   {frontFile && (
-                    <div className="mt-2 flex items-center gap-1.5 text-[11px] font-medium text-violet-600 dark:text-violet-400">
+                    <div className="mt-2 flex items-center gap-1.5 text-[11px] font-medium text-brand-lime">
                       <CheckCircle2 className="w-3.5 h-3.5" />
                       <span className="truncate max-w-[140px]">{frontFile.name}</span>
                     </div>
@@ -377,8 +377,8 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
                   onClick={() => backInputRef.current?.click()}
                   className={`relative rounded-2xl border-2 border-dashed p-5 flex flex-col items-center justify-center text-center cursor-pointer transition-all min-h-[200px] group ${
                     backFile
-                      ? 'border-teal-500/40 bg-teal-500/5'
-                      : 'border-slate-300/80 dark:border-slate-700/80 hover:border-teal-500/60 hover:bg-teal-500/5'
+                      ? 'border-brand-lime/50 bg-brand-lime/10'
+                      : 'border-slate-300/80 dark:border-brand-cream/20 hover:border-brand-lime/60 hover:bg-brand-lime/5'
                   }`}
                 >
                   {backPreview ? (
@@ -404,20 +404,20 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
                     </div>
                   ) : (
                     <>
-                      <div className="w-12 h-12 rounded-2xl bg-teal-500/10 flex items-center justify-center text-teal-500 mb-3 group-hover:scale-110 transition-transform">
+                      <div className="w-12 h-12 rounded-2xl bg-brand-lime/15 flex items-center justify-center text-brand-lime mb-3 group-hover:scale-110 transition-transform">
                         <FileText className="w-6 h-6" />
                       </div>
-                      <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+                      <span className="text-sm font-semibold text-slate-700 dark:text-brand-cream">
                         Back of Package
                       </span>
-                      <span className="text-[11px] text-slate-400 mt-1">
+                      <span className="text-[11px] text-slate-400 dark:text-slate-500 mt-1">
                         Nutrition facts & ingredients
                       </span>
                     </>
                   )}
 
                   {backFile && (
-                    <div className="mt-2 flex items-center gap-1.5 text-[11px] font-medium text-teal-600 dark:text-teal-400">
+                    <div className="mt-2 flex items-center gap-1.5 text-[11px] font-medium text-brand-lime">
                       <CheckCircle2 className="w-3.5 h-3.5" />
                       <span className="truncate max-w-[140px]">{backFile.name}</span>
                     </div>
@@ -430,7 +430,7 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
                 <button
                   onClick={clearDualSelection}
                   disabled={!frontFile && !backFile}
-                  className="px-4 py-2.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-medium transition-all border border-slate-200/60 dark:border-slate-700/60 flex items-center gap-2 disabled:opacity-40 hover:bg-slate-200 dark:hover:bg-slate-700"
+                  className="px-4 py-2.5 rounded-full bg-slate-100 dark:bg-brand-forest/20 text-slate-600 dark:text-brand-cream text-xs font-medium transition-all border border-slate-200/60 dark:border-brand-cream/20 flex items-center gap-2 disabled:opacity-40 hover:bg-slate-200 dark:hover:bg-brand-forest/40"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
                   Reset
@@ -438,7 +438,7 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
                 <button
                   onClick={handleDualSubmit}
                   disabled={!frontFile || !backFile || isAnalyzing}
-                  className="px-6 py-2.5 rounded-full bg-gradient-to-r from-violet-500 to-indigo-600 hover:from-violet-400 hover:to-indigo-500 text-white text-sm font-semibold shadow-xl shadow-violet-500/20 flex items-center gap-2 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-6 py-2.5 rounded-full bg-gradient-to-r from-brand-forest via-emerald-600 to-brand-lime hover:brightness-110 text-slate-900 text-sm font-black shadow-xl shadow-brand-lime/20 flex items-center gap-2 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isAnalyzing ? (
                     <>
@@ -474,8 +474,8 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
                 className="w-full h-full object-cover"
               />
 
-              <div className="absolute inset-8 border-2 border-dashed border-emerald-400/70 rounded-2xl pointer-events-none flex items-center justify-center">
-                <span className="text-emerald-400/90 text-xs font-mono bg-black/40 px-3 py-1 rounded-full backdrop-blur-md">
+              <div className="absolute inset-8 border-2 border-dashed border-brand-lime/70 rounded-2xl pointer-events-none flex items-center justify-center">
+                <span className="text-brand-lime text-xs font-mono bg-black/40 px-3 py-1 rounded-full backdrop-blur-md">
                   Position Food Label / Barcode in Frame
                 </span>
               </div>
@@ -490,7 +490,7 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
                 </button>
                 <button
                   onClick={capturePhoto}
-                  className="px-6 py-3 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-medium shadow-xl shadow-emerald-500/20 backdrop-blur-md flex items-center gap-2 transition-all active:scale-95"
+                  className="px-6 py-3 rounded-full bg-gradient-to-r from-brand-forest to-brand-lime hover:brightness-110 text-slate-900 font-black shadow-xl shadow-brand-lime/20 backdrop-blur-md flex items-center gap-2 transition-all active:scale-95"
                 >
                   <Camera className="w-5 h-5" />
                   <span>Capture Photo</span>
@@ -509,14 +509,14 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
               {!isAnalyzing && (
                 <button
                   onClick={clearSelection}
-                  className="absolute top-4 right-4 p-2 rounded-full bg-slate-100 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-all z-20"
+                  className="absolute top-4 right-4 p-2 rounded-full bg-slate-100 dark:bg-brand-darkCard hover:bg-slate-200 dark:hover:bg-brand-forest/40 text-slate-600 dark:text-brand-cream transition-all z-20"
                   aria-label="Remove File"
                 >
                   <X className="w-4 h-4" />
                 </button>
               )}
 
-              <div className="relative w-full max-w-xs aspect-square rounded-2xl overflow-hidden shadow-lg border border-slate-200/50 dark:border-slate-800/50 bg-slate-100 dark:bg-slate-950 flex items-center justify-center group">
+              <div className="relative w-full max-w-xs aspect-square rounded-2xl overflow-hidden shadow-lg border border-slate-200/50 dark:border-brand-cream/20 bg-slate-100 dark:bg-slate-950 flex items-center justify-center group">
                 {previewUrl ? (
                   <img
                     src={previewUrl}
@@ -525,7 +525,7 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
                   />
                 ) : (
                   <div className="flex flex-col items-center gap-3 p-6 text-slate-500">
-                    <FileText className="w-16 h-16 text-emerald-500" />
+                    <FileText className="w-16 h-16 text-brand-lime" />
                     <span className="text-sm font-medium text-center truncate max-w-full">
                       {selectedFile.name}
                     </span>
@@ -533,12 +533,12 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
                 )}
 
                 {isAnalyzing && (
-                  <div className="absolute inset-0 bg-emerald-500/10 pointer-events-none">
+                  <div className="absolute inset-0 bg-brand-lime/10 pointer-events-none">
                     <motion.div
                       initial={{ top: '0%' }}
                       animate={{ top: ['0%', '100%', '0%'] }}
                       transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-                      className="absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-emerald-400 to-transparent shadow-[0_0_15px_#10b981]"
+                      className="absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-brand-lime to-transparent shadow-[0_0_15px_#d9f99d]"
                     />
                   </div>
                 )}
@@ -546,13 +546,13 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
 
               <div className="mt-6 flex flex-col items-center gap-2">
                 {isAnalyzing ? (
-                  <div className="flex items-center gap-3 px-5 py-2.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-medium text-sm animate-pulse">
+                  <div className="flex items-center gap-3 px-5 py-2.5 rounded-full bg-brand-lime/10 border border-brand-lime/20 text-brand-lime font-medium text-sm animate-pulse">
                     <Sparkles className="w-4 h-4 animate-spin" />
                     <span>Analyzing Label with Dual-Layer Pipeline...</span>
                   </div>
                 ) : (
-                  <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300 text-sm font-medium">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                  <div className="flex items-center gap-2 text-slate-600 dark:text-brand-cream text-sm font-medium">
+                    <CheckCircle2 className="w-4 h-4 text-brand-lime" />
                     <span className="truncate max-w-xs">{selectedFile.name}</span>
                     <span className="text-xs text-slate-400">
                       ({(selectedFile.size / (1024 * 1024)).toFixed(2)} MB)
@@ -574,15 +574,15 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
               onClick={() => fileInputRef.current?.click()}
               className={`p-8 md:p-10 flex flex-col items-center justify-center text-center cursor-pointer transition-all border-2 border-dashed rounded-3xl ${
                 isDragging
-                  ? 'border-emerald-500 bg-emerald-500/5 dark:bg-emerald-500/10 scale-[0.99]'
-                  : 'border-slate-300/80 dark:border-slate-700/80 hover:border-emerald-500/60 dark:hover:border-emerald-500/60 hover:bg-slate-50/50 dark:hover:bg-slate-800/30'
+                  ? 'border-brand-lime bg-brand-lime/10 scale-[0.99]'
+                  : 'border-slate-300/80 dark:border-brand-cream/20 hover:border-brand-lime/60 dark:hover:border-brand-lime/60 hover:bg-slate-50/50 dark:hover:bg-brand-forest/10'
               }`}
             >
               <div className="relative mb-5">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-600 flex items-center justify-center text-white shadow-lg shadow-emerald-500/25">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-brand-forest to-brand-lime flex items-center justify-center text-slate-900 shadow-lg shadow-brand-lime/25">
                   <Camera className="w-8 h-8" />
                 </div>
-                <div className="absolute -bottom-1 -right-1 p-1.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-teal-500 shadow-md">
+                <div className="absolute -bottom-1 -right-1 p-1.5 rounded-xl bg-white dark:bg-brand-darkCard border border-slate-200 dark:border-brand-cream/20 text-brand-lime shadow-md">
                   <Sparkles className="w-3.5 h-3.5" />
                 </div>
               </div>
@@ -590,7 +590,7 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
               <h3 className="text-xl md:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
                 Take Photo or Upload Packaging
               </h3>
-              <p className="mt-1.5 text-sm text-slate-500 dark:text-slate-400 max-w-sm">
+              <p className="mt-1.5 text-sm text-slate-500 dark:text-brand-cream/80 max-w-sm">
                 Instant label analysis via camera or gallery
               </p>
 
@@ -601,7 +601,7 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
                     e.stopPropagation();
                     setIsLiveScannerOpen(true);
                   }}
-                  className="px-6 py-3 rounded-full bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-white text-sm font-bold shadow-xl shadow-emerald-500/25 transition-all active:scale-95 flex items-center gap-2"
+                  className="px-6 py-3 rounded-full bg-gradient-to-r from-brand-forest via-emerald-600 to-brand-lime hover:brightness-110 text-slate-900 text-sm font-black shadow-xl shadow-brand-lime/25 transition-all active:scale-95 flex items-center gap-2"
                 >
                   <Camera className="w-4 h-4" />
                   <span>Take Photo / Scan Package</span>
@@ -612,9 +612,9 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
                     e.stopPropagation();
                     fileInputRef.current?.click();
                   }}
-                  className="px-5 py-3 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-sm font-semibold transition-all border border-slate-200 dark:border-slate-700 flex items-center gap-2 active:scale-95"
+                  className="px-5 py-3 rounded-full bg-slate-100 dark:bg-brand-forest/20 hover:bg-slate-200 dark:hover:bg-brand-forest/40 text-slate-700 dark:text-brand-cream text-sm font-semibold transition-all border border-slate-200 dark:border-brand-cream/20 flex items-center gap-2 active:scale-95"
                 >
-                  <Upload className="w-4 h-4 text-emerald-500" />
+                  <Upload className="w-4 h-4 text-brand-lime" />
                   <span>Browse Gallery</span>
                 </button>
               </div>

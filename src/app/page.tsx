@@ -583,17 +583,17 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col font-sans pb-16">
       {/* 1. APPLE-STYLE GLASSMORPHIC HEADER */}
-      <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/70 dark:bg-slate-900/70 border-b border-slate-200/60 dark:border-slate-800/60 shadow-sm transition-all">
+      <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/80 dark:bg-brand-darkCard/90 border-b border-slate-200/60 dark:border-brand-cream/20 shadow-md transition-all">
         <div className="max-w-6xl mx-auto px-4 md:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/20">
-              <Apple className="w-5 h-5" />
+            <div className="p-2 rounded-2xl bg-gradient-to-tr from-brand-forest to-brand-lime text-brand-darkBg shadow-md shadow-brand-lime/20">
+              <Apple className="w-5 h-5 font-bold" />
             </div>
             <div className="flex flex-col">
               <span className="text-base font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
-                NutriGrade <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 font-semibold border border-emerald-500/20">AI</span>
+                NutriGrade <span className="text-xs px-2 py-0.5 rounded-full bg-brand-lime/15 text-brand-lime font-bold border border-brand-lime/30 shadow-sm">AI</span>
               </span>
-              <span className="text-[10px] text-slate-400 font-medium">Nutritional Quality &amp; Additive Analysis Engine</span>
+              <span className="text-[10px] text-brand-cream/80 font-medium">Nutritional Quality &amp; Additive Analysis Engine</span>
             </div>
           </div>
 
@@ -601,47 +601,47 @@ export default function Home() {
             {/* Shopping Lists Button */}
             <Link
               href="/lists"
-              className="px-3 py-1.5 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-semibold text-xs transition-all border border-emerald-500/20 flex items-center gap-1.5"
+              className="px-3 py-1.5 rounded-full bg-brand-lime/10 hover:bg-brand-lime/20 text-brand-lime font-semibold text-xs transition-all border border-brand-lime/30 flex items-center gap-1.5"
             >
-              <ShoppingCart className="w-4 h-4 text-emerald-500" />
+              <ShoppingCart className="w-4 h-4 text-brand-lime" />
               <span className="hidden sm:inline">Shopping Lists</span>
             </Link>
 
             {/* Hall of Shame Button */}
             <Link
               href="/hall-of-shame"
-              className="px-3 py-1.5 rounded-full bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 font-semibold text-xs transition-all border border-rose-500/20 flex items-center gap-1.5"
+              className="px-3 py-1.5 rounded-full bg-brand-rust/10 hover:bg-brand-rust/20 text-brand-rust font-semibold text-xs transition-all border border-brand-rust/30 flex items-center gap-1.5"
             >
-              <Flame className="w-4 h-4 text-rose-500" />
+              <Flame className="w-4 h-4 text-brand-rust" />
               <span className="hidden sm:inline">Hall of Shame</span>
             </Link>
 
             {/* Pantry Audit Button */}
             <Link
               href="/pantry"
-              className="px-3 py-1.5 rounded-full bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 font-semibold text-xs transition-all border border-indigo-500/20 flex items-center gap-1.5"
+              className="px-3 py-1.5 rounded-full bg-brand-forest/20 hover:bg-brand-forest/30 text-brand-cream font-semibold text-xs transition-all border border-brand-cream/30 flex items-center gap-1.5"
             >
-              <PackageCheck className="w-4 h-4 text-indigo-500" />
+              <PackageCheck className="w-4 h-4 text-brand-lime" />
               <span className="hidden sm:inline">Pantry Audit</span>
             </Link>
 
             {/* Scan History Page Button */}
             <Link
               href="/history"
-              className="p-2.5 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-all border border-slate-200/50 dark:border-slate-700/50"
+              className="p-2.5 rounded-full bg-slate-100 dark:bg-brand-darkCard hover:bg-slate-200 dark:hover:bg-brand-forest/40 text-slate-600 dark:text-brand-cream transition-all border border-slate-200/50 dark:border-brand-cream/20"
               title="Full Unlimited Scan History"
               aria-label="Full Scan History"
             >
-              <History className="w-4 h-4 text-indigo-500" />
+              <History className="w-4 h-4 text-brand-lime" />
             </Link>
 
             {/* Theme Toggle */}
             <button
               onClick={toggleDarkMode}
-              className="p-2.5 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-all border border-slate-200/50 dark:border-slate-700/50"
+              className="p-2.5 rounded-full bg-slate-100 dark:bg-brand-darkCard hover:bg-slate-200 dark:hover:bg-brand-forest/40 text-slate-600 dark:text-brand-cream transition-all border border-slate-200/50 dark:border-brand-cream/20"
               aria-label="Toggle dark mode"
             >
-              {isDarkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-700" />}
+              {isDarkMode ? <Sun className="w-4 h-4 text-brand-lime" /> : <Moon className="w-4 h-4 text-slate-700" />}
             </button>
           </div>
         </div>
@@ -660,20 +660,20 @@ export default function Home() {
         {/* HERO INTRO & PRIMARY SCANNER CARD (80/20 RULE) */}
         <section className="text-center space-y-6">
           <div className="flex flex-wrap items-center justify-between gap-3 max-w-2xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 text-xs font-semibold text-slate-600 dark:text-slate-300 shadow-sm">
-              <Sparkles className="w-4 h-4 text-emerald-500" />
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-100 dark:bg-brand-darkCard border border-slate-200/60 dark:border-brand-cream/20 text-xs font-semibold text-slate-600 dark:text-brand-cream shadow-sm">
+              <Sparkles className="w-4 h-4 text-brand-lime" />
               <span>Nutritional Quality Breakdown</span>
             </div>
 
             {/* Personalize My Scan Drawer Button */}
             <button
               onClick={() => setIsPersonalizeOpen(true)}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 text-xs font-bold text-slate-700 dark:text-slate-200 shadow-md hover:bg-slate-50 dark:hover:bg-slate-800 transition-all active:scale-95"
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white dark:bg-brand-darkCard border border-slate-200/80 dark:border-brand-cream/30 text-xs font-bold text-slate-700 dark:text-brand-cream shadow-md hover:bg-slate-50 dark:hover:bg-brand-forest/30 transition-all active:scale-95"
             >
-              <SlidersHorizontal className="w-3.5 h-3.5 text-emerald-500" />
+              <SlidersHorizontal className="w-3.5 h-3.5 text-brand-lime" />
               <span>Personalize My Scan</span>
               {totalActiveFilters > 0 && (
-                <span className="px-2 py-0.5 rounded-full bg-emerald-500 text-white font-bold text-[10px] shadow-sm">
+                <span className="px-2 py-0.5 rounded-full bg-brand-forest text-brand-lime font-bold text-[10px] shadow-sm border border-brand-lime/30">
                   {totalActiveFilters} Active
                 </span>
               )}
@@ -681,10 +681,13 @@ export default function Home() {
           </div>
 
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 dark:text-white max-w-3xl mx-auto leading-tight">
-            Know What’s Really in Your Food.
+            Know What’s Really in Your Food. <br className="hidden md:block" />
+            <span className="bg-gradient-to-r from-brand-lime via-emerald-400 to-teal-300 bg-clip-text text-transparent drop-shadow-sm">
+              Backed by Science.
+            </span>
           </h1>
 
-          <p className="text-base md:text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-base md:text-lg text-slate-600 dark:text-brand-cream/80 max-w-2xl mx-auto leading-relaxed">
             Instant food grade calculations, additive toxicity screening, and marketing claim verification based on Nutri-Score and NOVA standards.
           </p>
 

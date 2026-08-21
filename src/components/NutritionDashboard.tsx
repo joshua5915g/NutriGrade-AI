@@ -156,22 +156,22 @@ export const NutritionDashboard: React.FC<NutritionDashboardProps> = ({
       />
 
       {/* 2. HERO VERDICT CARD */}
-      <div className="relative overflow-hidden rounded-3xl backdrop-blur-xl bg-white/80 dark:bg-slate-900/80 border border-slate-200/60 dark:border-slate-800/60 shadow-2xl p-6 md:p-8">
+      <div className="relative overflow-hidden rounded-3xl backdrop-blur-xl bg-white/80 dark:bg-brand-darkCard/90 border border-slate-200/60 dark:border-brand-cream/20 shadow-2xl p-6 md:p-8">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="space-y-3 text-center md:text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-semibold text-slate-600 dark:text-slate-300">
-              <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 dark:bg-brand-darkBg text-xs font-semibold text-slate-600 dark:text-brand-cream">
+              <Sparkles className="w-3.5 h-3.5 text-brand-lime" />
               <span>AI Analysis Complete</span>
             </div>
             <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
               Food Nutritional Rating
             </h2>
-            <p className="text-sm md:text-base text-slate-600 dark:text-slate-300 max-w-xl leading-relaxed">
+            <p className="text-sm md:text-base text-slate-600 dark:text-brand-cream/80 max-w-xl leading-relaxed">
               {explanation}
             </p>
           </div>
 
-          <div className="shrink-0 flex flex-col items-center p-4 rounded-3xl bg-slate-50/50 dark:bg-slate-800/50 border border-slate-200/40 dark:border-slate-700/40">
+          <div className="shrink-0 flex flex-col items-center p-4 rounded-3xl bg-slate-50/50 dark:bg-brand-darkBg/60 border border-slate-200/40 dark:border-brand-cream/20">
             <div className="flex items-center gap-4">
               <FavoriteButton
                 productName={explanation.slice(0, 40)}
