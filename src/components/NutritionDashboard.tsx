@@ -37,6 +37,8 @@ import { calculateEcoScore } from '../lib/algorithms/ecoScoreEngine';
 import { EcoScoreCard } from './EcoScoreCard';
 import { calculateUpfAddictionRisk } from '../lib/algorithms/upfAddictionRadar';
 import { AddictionRiskCard } from './AddictionRiskCard';
+import { evaluatePediatricSafety } from '../lib/algorithms/pediatricSafetyEngine';
+import { PediatricSafetyCard } from './PediatricSafetyCard';
 
 interface NutritionDashboardProps {
   analysis: AnalysisResult;
@@ -71,6 +73,7 @@ export const NutritionDashboard: React.FC<NutritionDashboardProps> = ({
   const fdaFopResult = calculateFdaFop(normalizedData);
   const ecoResult = calculateEcoScore(ingredientStrings, 100);
   const addictionResult = calculateUpfAddictionRisk(normalizedData, ingredientStrings);
+  const pediatricSafety = evaluatePediatricSafety(normalizedData, ingredientStrings);
 
   // Default active profile fallback
   const userProfile: UserProfile = profile || {
@@ -440,6 +443,9 @@ export const NutritionDashboard: React.FC<NutritionDashboardProps> = ({
 
       {/* 8D. UPF ADDICTION & CRAVING TRIGGER INDEX */}
       <AddictionRiskCard result={addictionResult} />
+
+      {/* 8E. PEDIATRIC & TODDLER NUTRITION SAFETY */}
+      <PediatricSafetyCard safetyResult={pediatricSafety} />
 
       {/* 9. NOVA ULTRA-PROCESSING LEVEL CARD */}
       <div
