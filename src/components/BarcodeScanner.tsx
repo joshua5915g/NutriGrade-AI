@@ -11,6 +11,7 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import { BrowserMultiFormatReader } from '@zxing/library';
+import { AisleFeedbackControls } from './AisleFeedbackControls';
 
 interface BarcodeScannerProps {
   onBarcodeDetected: (barcode: string) => void;
@@ -104,6 +105,11 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
           <span>{scanError}</span>
         </div>
       )}
+
+      {/* AISLE MODE AUDIO & HAPTIC SCAN CONTROLS */}
+      <div className="pt-2">
+        <AisleFeedbackControls />
+      </div>
     </div>
   );
 };

@@ -61,6 +61,7 @@ import { PersonalizeDrawer } from '../components/PersonalizeDrawer';
 import { OfflineBanner } from '../components/OfflineBanner';
 import { FloatingGuideModal, FloatingGuideButton } from '../components/FloatingGuideModal';
 import { NutriBotDrawer } from '../components/NutriBotDrawer';
+import { triggerAisleFeedback } from '../lib/utils/aisleFeedback';
 import {
   preloadTopProducts,
   getCachedProduct,
@@ -388,6 +389,13 @@ export default function Home() {
       greenwashing,
     });
 
+    // 8. Trigger Smart Aisle Mode Sound & Haptic Feedback
+    triggerAisleFeedback({
+      grade: nutriScore.grade,
+      hasPersonalConflict: Boolean(personalized.personalizedAlerts && personalized.personalizedAlerts.length > 0),
+      isNova4UltraProcessed: novaGroup === 4,
+    });
+
     // Persist to scan history
     setCurrentProductName(frontText || 'Scanned Product');
     setCurrentIngredients(ingredients || []);
@@ -583,6 +591,13 @@ export default function Home() {
     setCurrentProductName(product.productName);
     setCurrentIngredients(product.ingredients);
     saveScanToHistory(product.productName, product.analysis, 'global_search');
+
+    triggerAisleFeedback({
+      grade: product.analysis.nutriScore.grade,
+      hasPersonalConflict: Boolean(personalized.personalizedAlerts && personalized.personalizedAlerts.length > 0),
+      isNova4UltraProcessed: product.analysis.novaGroup === 4,
+    });
+
     setIsAnalyzing(false);
   };
 
