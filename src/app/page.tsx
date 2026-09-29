@@ -60,6 +60,7 @@ import {
 import { PersonalizeDrawer } from '../components/PersonalizeDrawer';
 import { OfflineBanner } from '../components/OfflineBanner';
 import { FloatingGuideModal, FloatingGuideButton } from '../components/FloatingGuideModal';
+import { NutriBotDrawer } from '../components/NutriBotDrawer';
 import {
   preloadTopProducts,
   getCachedProduct,
@@ -824,6 +825,20 @@ export default function Home() {
         onClose={() => setIsGuideModalOpen(false)}
         onOpenPersonalize={() => setIsPersonalizeOpen(true)}
         onSelectSample={loadDemoSample}
+      />
+
+      {/* FEATURE 7: NUTRIBOT CONTEXTUAL AI NUTRITIONIST COPILOT */}
+      <NutriBotDrawer
+        currentProduct={
+          currentAnalysis
+            ? {
+                name: currentProductName || 'Scanned Food Product',
+                analysis: currentAnalysis.analysis,
+                ingredients: currentIngredients,
+              }
+            : null
+        }
+        profile={profile}
       />
     </div>
   );
