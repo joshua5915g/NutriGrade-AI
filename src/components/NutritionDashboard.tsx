@@ -39,6 +39,8 @@ import { calculateUpfAddictionRisk } from '../lib/algorithms/upfAddictionRadar';
 import { AddictionRiskCard } from './AddictionRiskCard';
 import { evaluatePediatricSafety } from '../lib/algorithms/pediatricSafetyEngine';
 import { PediatricSafetyCard } from './PediatricSafetyCard';
+import { scanAllergenMatrix } from '../lib/algorithms/allergenMatrix';
+import { AllergenMatrixCard } from './AllergenMatrixCard';
 
 interface NutritionDashboardProps {
   analysis: AnalysisResult;
@@ -74,6 +76,7 @@ export const NutritionDashboard: React.FC<NutritionDashboardProps> = ({
   const ecoResult = calculateEcoScore(ingredientStrings, 100);
   const addictionResult = calculateUpfAddictionRisk(normalizedData, ingredientStrings);
   const pediatricSafety = evaluatePediatricSafety(normalizedData, ingredientStrings);
+  const allergenScanResult = scanAllergenMatrix(ingredientStrings, profile, explanation);
 
   // Default active profile fallback
   const userProfile: UserProfile = profile || {
@@ -446,6 +449,9 @@ export const NutritionDashboard: React.FC<NutritionDashboardProps> = ({
 
       {/* 8E. PEDIATRIC & TODDLER NUTRITION SAFETY */}
       <PediatricSafetyCard safetyResult={pediatricSafety} />
+
+      {/* 8F. ALLERGEN & CROSS-CONTAMINATION WARNING MATRIX */}
+      <AllergenMatrixCard allergenScan={allergenScanResult} />
 
       {/* 9. NOVA ULTRA-PROCESSING LEVEL CARD */}
       <div
