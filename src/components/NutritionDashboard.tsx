@@ -12,6 +12,7 @@ import {
   HeartPulse,
   Scale,
   Utensils,
+  Share2,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -41,6 +42,7 @@ import { evaluatePediatricSafety } from '../lib/algorithms/pediatricSafetyEngine
 import { PediatricSafetyCard } from './PediatricSafetyCard';
 import { scanAllergenMatrix } from '../lib/algorithms/allergenMatrix';
 import { AllergenMatrixCard } from './AllergenMatrixCard';
+import { SocialNutriCardModal } from './SocialNutriCardModal';
 
 interface NutritionDashboardProps {
   analysis: AnalysisResult;
@@ -60,6 +62,7 @@ export const NutritionDashboard: React.FC<NutritionDashboardProps> = ({
   const { normalizedData, nutriScore, novaGroup, additives, explanation } = analysis;
   const alerts: PersonalizedAlert[] = personalizedAnalysis?.personalizedAlerts || [];
   const [loggedDaily, setLoggedDaily] = React.useState(false);
+  const [isSocialCardOpen, setIsSocialCardOpen] = React.useState(false);
 
   const handleLogDaily = () => {
     addDailyLogEntry(analysis, explanation.slice(0, 40), '', 100, 'snack');
@@ -225,6 +228,14 @@ export const NutritionDashboard: React.FC<NutritionDashboardProps> = ({
                 ) : (
                   <Utensils className="w-5 h-5 text-brand-lime" />
                 )}
+              </button>
+              <button
+                onClick={() => setIsSocialCardOpen(true)}
+                className="p-3 rounded-full bg-sky-500/20 hover:bg-sky-500/30 text-sky-400 border border-sky-400/40 transition-all flex items-center justify-center shadow-sm hover:scale-105 active:scale-95"
+                title="Create Social NutriCard (Instagram Story & WhatsApp)"
+                aria-label="Share Social NutriCard"
+              >
+                <Share2 className="w-5 h-5 text-sky-400" />
               </button>
               <NutriScoreBadge grade={nutriScore.grade} score={nutriScore.score} size="lg" />
             </div>
@@ -538,6 +549,15 @@ export const NutritionDashboard: React.FC<NutritionDashboardProps> = ({
 
       {/* 10. CLINICAL DISCLAIMER BANNER */}
       <MedicalDisclaimerBanner variant="full" />
+
+      {/* FEATURE 10: SOCIAL NUTRICARD MODAL */}
+      <SocialNutriCardModal
+        isOpen={isSocialCardOpen}
+        onClose={() => setIsSocialCardOpen(false)}
+        productName={explanation.slice(0, 40) || 'Scanned Food'}
+        analysis={analysis}
+        greenwashingResult={greenwashingResult}
+      />
     </motion.div>
   );
 };
