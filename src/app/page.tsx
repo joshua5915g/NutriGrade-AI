@@ -56,6 +56,7 @@ import {
 } from '../components/DietaryPreferencesModal';
 import { PersonalizeDrawer } from '../components/PersonalizeDrawer';
 import { OfflineBanner } from '../components/OfflineBanner';
+import { FloatingGuideModal, FloatingGuideButton } from '../components/FloatingGuideModal';
 import {
   preloadTopProducts,
   getCachedProduct,
@@ -146,6 +147,7 @@ export default function Home() {
   const [isDisclaimerModalOpen, setIsDisclaimerModalOpen] = useState(false);
   const [pendingMedicalFlag, setPendingMedicalFlag] = useState<keyof UserProfile['medicalFlags'] | null>(null);
   const [isPersonalizeOpen, setIsPersonalizeOpen] = useState(false);
+  const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
 
   const activeMedicalCount = Object.values(profile.medicalFlags || {}).filter(Boolean).length;
   const activeDietaryCount = Object.values(profile.dietaryPreferences || {}).filter(Boolean).length;
@@ -598,6 +600,16 @@ export default function Home() {
           </div>
 
           <div className="flex items-center gap-2">
+            {/* Guide & How It Works Button */}
+            <button
+              onClick={() => setIsGuideModalOpen(true)}
+              className="px-3 py-1.5 rounded-full bg-brand-lime/10 hover:bg-brand-lime/20 text-brand-lime font-bold text-xs transition-all border border-brand-lime/30 flex items-center gap-1.5 shadow-sm active:scale-95"
+              title="Interactive Guide & Preview"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-brand-lime" />
+              <span className="hidden sm:inline">How It Works</span>
+            </button>
+
             {/* Shopping Lists Button */}
             <Link
               href="/lists"
@@ -770,6 +782,15 @@ export default function Home() {
         onToggleMedicalFlag={toggleMedicalFlag}
         onUpdateDietaryPreferences={updateDietaryPreferences}
         onClearHealthData={handleClearHealthData}
+      />
+
+      {/* FLOATING INTERACTIVE GUIDE & 1-CLICK DEMO HUB */}
+      <FloatingGuideButton onOpen={() => setIsGuideModalOpen(true)} />
+      <FloatingGuideModal
+        isOpen={isGuideModalOpen}
+        onClose={() => setIsGuideModalOpen(false)}
+        onOpenPersonalize={() => setIsPersonalizeOpen(true)}
+        onSelectSample={loadDemoSample}
       />
     </div>
   );
