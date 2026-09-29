@@ -20,6 +20,7 @@ import {
   Lock,
   Scale,
   Activity,
+  UtensilsCrossed,
 } from 'lucide-react';
 import {
   loadUserHealthProfile,
@@ -630,6 +631,16 @@ export default function Home() {
             >
               <Activity className="w-4 h-4 text-brand-lime" />
               <span className="hidden sm:inline">Daily Fuel</span>
+            </Link>
+
+            {/* Meal Builder Button */}
+            <Link
+              href="/meal-builder"
+              className="px-3 py-1.5 rounded-full bg-brand-forest/20 hover:bg-brand-forest/30 text-brand-cream font-semibold text-xs transition-all border border-brand-cream/30 flex items-center gap-1.5"
+              title="Custom Recipe & Meal Nutri-Grader"
+            >
+              <UtensilsCrossed className="w-4 h-4 text-brand-lime" />
+              <span className="hidden sm:inline">Recipes</span>
             </Link>
 
             {/* Shopping Lists Button */}
