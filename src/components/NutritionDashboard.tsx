@@ -35,6 +35,8 @@ import { MedicalDisclaimerBanner } from './MedicalDisclaimer';
 import { addDailyLogEntry } from '../lib/storage/dailyLogStore';
 import { calculateEcoScore } from '../lib/algorithms/ecoScoreEngine';
 import { EcoScoreCard } from './EcoScoreCard';
+import { calculateUpfAddictionRisk } from '../lib/algorithms/upfAddictionRadar';
+import { AddictionRiskCard } from './AddictionRiskCard';
 
 interface NutritionDashboardProps {
   analysis: AnalysisResult;
@@ -68,6 +70,7 @@ export const NutritionDashboard: React.FC<NutritionDashboardProps> = ({
   const seedOilResult = detectSeedOils(ingredientStrings);
   const fdaFopResult = calculateFdaFop(normalizedData);
   const ecoResult = calculateEcoScore(ingredientStrings, 100);
+  const addictionResult = calculateUpfAddictionRisk(normalizedData, ingredientStrings);
 
   // Default active profile fallback
   const userProfile: UserProfile = profile || {
@@ -434,6 +437,9 @@ export const NutritionDashboard: React.FC<NutritionDashboardProps> = ({
 
       {/* 8C. FOOD CARBON & PLANETARY ECO-SCORE CARD */}
       <EcoScoreCard ecoResult={ecoResult} />
+
+      {/* 8D. UPF ADDICTION & CRAVING TRIGGER INDEX */}
+      <AddictionRiskCard result={addictionResult} />
 
       {/* 9. NOVA ULTRA-PROCESSING LEVEL CARD */}
       <div
