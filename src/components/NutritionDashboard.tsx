@@ -10,7 +10,9 @@ import {
   Sparkles,
   Eye,
   HeartPulse,
+  Scale,
 } from 'lucide-react';
+import Link from 'next/link';
 
 import { AnalysisResult } from '../types/nutrition';
 import { UserProfile, PersonalizedAnalysis, PersonalizedAlert } from '../types/user';
@@ -179,6 +181,14 @@ export const NutritionDashboard: React.FC<NutritionDashboardProps> = ({
                 novaGroup={novaGroup}
                 analysis={analysis}
               />
+              <Link
+                href="/compare"
+                className="p-3 rounded-full bg-brand-forest/20 hover:bg-brand-forest/30 text-brand-cream border border-brand-cream/30 transition-all flex items-center justify-center shadow-sm hover:scale-105 active:scale-95"
+                title="Compare this item vs another product"
+                aria-label="Compare with another product"
+              >
+                <Scale className="w-5 h-5 text-brand-lime" />
+              </Link>
               <NutriScoreBadge grade={nutriScore.grade} score={nutriScore.score} size="lg" />
             </div>
           </div>
