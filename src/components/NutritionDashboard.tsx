@@ -33,6 +33,8 @@ import { detectSeedOils } from '../lib/algorithms/seedOilRadar';
 import { calculateFdaFop } from '../lib/algorithms/fdaFopSimulator';
 import { MedicalDisclaimerBanner } from './MedicalDisclaimer';
 import { addDailyLogEntry } from '../lib/storage/dailyLogStore';
+import { calculateEcoScore } from '../lib/algorithms/ecoScoreEngine';
+import { EcoScoreCard } from './EcoScoreCard';
 
 interface NutritionDashboardProps {
   analysis: AnalysisResult;
@@ -65,6 +67,7 @@ export const NutritionDashboard: React.FC<NutritionDashboardProps> = ({
     : additives.map((a) => a.commonName).concat(explanation ? [explanation] : []);
   const seedOilResult = detectSeedOils(ingredientStrings);
   const fdaFopResult = calculateFdaFop(normalizedData);
+  const ecoResult = calculateEcoScore(ingredientStrings, 100);
 
   // Default active profile fallback
   const userProfile: UserProfile = profile || {
@@ -428,6 +431,9 @@ export const NutritionDashboard: React.FC<NutritionDashboardProps> = ({
 
       {/* 8B. SEED OIL & INFLAMMATORY FAT RADAR BANNER */}
       <SeedOilBanner result={seedOilResult} />
+
+      {/* 8C. FOOD CARBON & PLANETARY ECO-SCORE CARD */}
+      <EcoScoreCard ecoResult={ecoResult} />
 
       {/* 9. NOVA ULTRA-PROCESSING LEVEL CARD */}
       <div
