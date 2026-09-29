@@ -11,6 +11,7 @@ import {
   Eye,
   HeartPulse,
   Scale,
+  Utensils,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -31,6 +32,7 @@ import { FavoriteButton } from './FavoriteButton';
 import { detectSeedOils } from '../lib/algorithms/seedOilRadar';
 import { calculateFdaFop } from '../lib/algorithms/fdaFopSimulator';
 import { MedicalDisclaimerBanner } from './MedicalDisclaimer';
+import { addDailyLogEntry } from '../lib/storage/dailyLogStore';
 
 interface NutritionDashboardProps {
   analysis: AnalysisResult;
@@ -49,6 +51,13 @@ export const NutritionDashboard: React.FC<NutritionDashboardProps> = ({
 }) => {
   const { normalizedData, nutriScore, novaGroup, additives, explanation } = analysis;
   const alerts: PersonalizedAlert[] = personalizedAnalysis?.personalizedAlerts || [];
+  const [loggedDaily, setLoggedDaily] = React.useState(false);
+
+  const handleLogDaily = () => {
+    addDailyLogEntry(analysis, explanation.slice(0, 40), '', 100, 'snack');
+    setLoggedDaily(true);
+    setTimeout(() => setLoggedDaily(false), 3000);
+  };
 
   // Compute Seed Oil Radar & FDA FOP Compliance metrics dynamically
   const ingredientStrings = ingredients.length > 0
@@ -189,6 +198,22 @@ export const NutritionDashboard: React.FC<NutritionDashboardProps> = ({
               >
                 <Scale className="w-5 h-5 text-brand-lime" />
               </Link>
+              <button
+                onClick={handleLogDaily}
+                className={`p-3 rounded-full border transition-all flex items-center justify-center shadow-sm hover:scale-105 active:scale-95 ${
+                  loggedDaily
+                    ? 'bg-emerald-500 text-white border-emerald-500'
+                    : 'bg-brand-lime/20 hover:bg-brand-lime/30 text-brand-lime border-brand-lime/40'
+                }`}
+                title={loggedDaily ? "Logged to Today's Daily Fuel!" : "Log to Today's Daily Fuel"}
+                aria-label="Log to Daily Fuel"
+              >
+                {loggedDaily ? (
+                  <CheckCircle2 className="w-5 h-5 text-white" />
+                ) : (
+                  <Utensils className="w-5 h-5 text-brand-lime" />
+                )}
+              </button>
               <NutriScoreBadge grade={nutriScore.grade} score={nutriScore.score} size="lg" />
             </div>
           </div>

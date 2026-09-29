@@ -19,6 +19,7 @@ import {
   Trash2,
   Lock,
   Scale,
+  Activity,
 } from 'lucide-react';
 import {
   loadUserHealthProfile,
@@ -619,6 +620,16 @@ export default function Home() {
             >
               <Scale className="w-4 h-4 text-brand-lime" />
               <span className="hidden sm:inline">Compare</span>
+            </Link>
+
+            {/* Daily Fuel Tracker Button */}
+            <Link
+              href="/tracker"
+              className="px-3 py-1.5 rounded-full bg-brand-lime/10 hover:bg-brand-lime/20 text-brand-lime font-semibold text-xs transition-all border border-brand-lime/30 flex items-center gap-1.5"
+              title="Daily Intake & Biological Ledger"
+            >
+              <Activity className="w-4 h-4 text-brand-lime" />
+              <span className="hidden sm:inline">Daily Fuel</span>
             </Link>
 
             {/* Shopping Lists Button */}
