@@ -64,6 +64,56 @@ Powered by **Google Gemini 1.5 Flash Vision AI**, **Open Food Facts API**, and p
 
 ---
 
+## 🌟 The 10 Most Wanted Food Intelligence Features
+
+All 10 flagship features have been custom-engineered, tested with production builds, and committed to the repository:
+
+1. ⚖️ **Feature 1: Side-by-Side Product Comparison ("Clash of Foods")** (`/compare`)
+   - Dual-slot food arena comparing two grocery items across Nutri-Score, NOVA Group, Sugar, Sodium, Calories, Fiber, Additives, and Microbiome Impact.
+   - Computes an automated clinical verdict with clear recommendation reasons and pre-loaded grocery duel presets.
+
+2. 📊 **Feature 2: Daily Nutrition & Micro-Nutrient Tracker ("Daily Fuel Log")** (`/tracker`)
+   - Log foods directly from scan results categorized into Breakfast, Lunch, Dinner, or Snacks.
+   - Live progress rings tracking Calorie budgets, Sodium thresholds, and Added Sugar limits with personalized health alerts.
+
+3. 🌍 **Feature 3: Food Carbon & Planetary Eco-Score Engine**
+   - Agribalyse-grounded environmental impact engine calculating CO₂e greenhouse gas emissions per 100g, freshwater usage, and deforestation risk.
+   - Translates food carbon footprints into relatable equivalents (e.g. smartphone charges, km driven in a gas car).
+
+4. 🧠 **Feature 4: UPF Addiction & Hyper-Palatable Craving Trigger Index**
+   - Implements the Yale Food Addiction Scale & Fazzino hyper-palatability criteria (Fat + Sugar synergy > 25% kcal, Fat + Sodium synergy).
+   - Flags industrial bliss-point formulations and dopaminergic overeating triggers.
+
+5. 👶 **Feature 5: Pediatric & Toddler Nutrition Safety Mode ("ChildSafe Engine")**
+   - Pediatric safety screening for choking hazards (whole nuts, hard spheres, gummy candies), neurotoxic artificial food dyes (Red 40, Yellow 5/6, Blue 1), high caffeine, and WHO toddler added sugar bans.
+   - Categorizes foods into *Child Safe (Green)*, *Caution for Children (Yellow)*, or *Hazard for Kids (Red)*.
+
+6. 🍲 **Feature 6: Custom Meal Builder & Recipe Blended Nutri-Grader** (`/meal-builder`)
+   - Interactive recipe constructor calculating weight-weighted nutritional aggregation across multiple ingredients.
+   - Derives blended composite Nutri-Score, overall NOVA rating, total macro breakdowns, and saves custom recipes locally.
+
+7. 🤖 **Feature 7: NutriBot Contextual AI Nutritionist Copilot** (`/api/nutribot`)
+   - Interactive slide-over chat drawer powered by Google Gemini 1.5 Flash (with intelligent local clinical heuristics fallback).
+   - Dynamically grounded in the currently scanned food product, ingredients, and the user's active medical profile.
+
+8. 🚨 **Feature 8: Allergen & Cross-Contamination Warning Matrix (FDA Big-9 & EU-14 Scanner)**
+   - Deep allergen engine identifying confirmed recipe ingredients and manufacturer advisory statements ("May contain traces of...", "Shared equipment").
+   - Cross-checks against user medical flags (Celiac gluten-free, lactose intolerance, soy allergy, sulfites) with urgent alert banners.
+
+9. 🔊 **Feature 9: Smart Grocery Aisle Scanner (Web Audio API Chimes & Haptic Feedback)**
+   - In-store grocery shopping mode utilizing browser Web Audio API synthesis:
+     - Grade A/B: Joyful ascending major chord chime (`C5 - E5 - G5`).
+     - Grade C: Neutral dual harmonic chime (`A4 - C5`).
+     - Grade D/E: Low dissonant warning buzzer (`F#3 + C3`).
+     - Allergen Conflict: Urgent staccato alarm pulses.
+   - Device vibration feedback (`navigator.vibrate`) with customizable audio/haptic toggles.
+
+10. 📱 **Feature 10: Shareable Social NutriCard Generator (Instagram Story & WhatsApp)**
+    - Studio modal generating high-resolution (2x retina) Instagram Story (9:16 vertical poster) and Square (1:1 feed / WhatsApp) food scorecards.
+    - Features 1-click PNG image download via `html2canvas`, native Web Share API mobile integration, and formatted summary clipboard copying.
+
+---
+
 ## 🛠️ Tech Stack
 
 | Layer | Technology |
