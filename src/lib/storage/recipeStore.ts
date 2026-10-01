@@ -17,7 +17,7 @@ export const STARTER_RECIPES: SavedRecipe[] = [
     name: 'Clinical High-Fiber Power Bowl',
     description: 'Gut-protective blend of organic oats, unsweetened almond milk, chia seeds, and fresh berries.',
     servings: 1,
-    createdAt: new Date().toISOString(),
+    createdAt: '2026-01-01T00:00:00.000Z',
     ingredients: [
       {
         id: 'ing_oats',
@@ -80,7 +80,7 @@ export const STARTER_RECIPES: SavedRecipe[] = [
     name: 'Mediterranean Protein Plate',
     description: 'Clean Greek yogurt, extra virgin olive oil, cucumber, and chickpeas.',
     servings: 1,
-    createdAt: new Date().toISOString(),
+    createdAt: '2026-01-01T00:00:00.000Z',
     ingredients: [
       {
         id: 'ing_greek_yogurt',

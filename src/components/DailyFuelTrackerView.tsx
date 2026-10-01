@@ -37,7 +37,22 @@ import { getHistoryRecords, ScanHistoryRecord } from '../lib/storage/historyMana
 import { SAMPLE_COMPARE_PRODUCTS } from '../lib/data/sampleFoods';
 import { NutriScoreBadge } from './NutriScoreBadge';
 
+function formatDisplayDate(dateStr: string): string {
+  const parts = dateStr.split('-');
+  if (parts.length !== 3) return dateStr;
+  const year = parseInt(parts[0], 10);
+  const monthIdx = parseInt(parts[1], 10) - 1;
+  const day = parseInt(parts[2], 10);
+  const d = new Date(year, monthIdx, day);
+  return d.toLocaleDateString('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+  });
+}
+
 export const DailyFuelTrackerView: React.FC = () => {
+  const [isMounted, setIsMounted] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string>(getTodayDateString());
   const [entries, setEntries] = useState<DailyLogEntry[]>([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -47,6 +62,10 @@ export const DailyFuelTrackerView: React.FC = () => {
   const [selectedMealType, setSelectedMealType] = useState<DailyLogEntry['mealType']>('snack');
   const [portionSizeGrams, setPortionSizeGrams] = useState<number>(100);
   const [notification, setNotification] = useState<string | null>(null);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Load entries whenever selectedDate changes
   useEffect(() => {
@@ -183,14 +202,10 @@ export const DailyFuelTrackerView: React.FC = () => {
 
           <div className="px-3 text-center">
             <span className="text-xs font-bold text-slate-900 dark:text-white block">
-              {isToday ? 'Today' : selectedDate}
+              {isMounted && isToday ? 'Today' : selectedDate}
             </span>
             <span className="text-[10px] text-slate-400 dark:text-brand-cream/60">
-              {new Date(selectedDate).toLocaleDateString(undefined, {
-                weekday: 'short',
-                month: 'short',
-                day: 'numeric',
-              })}
+              {formatDisplayDate(selectedDate)}
             </span>
           </div>
 
