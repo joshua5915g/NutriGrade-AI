@@ -15,7 +15,7 @@ import { NormalizedNutritionData } from '../types/nutrition';
 import { UserProfile, PersonalizedAlert } from '../types/user';
 
 interface PersonalHealthBannerProps {
-  profile: UserProfile;
+  profile?: UserProfile | null;
   normalizedData: NormalizedNutritionData;
   alerts: PersonalizedAlert[];
   ingredients?: string[];
@@ -33,7 +33,12 @@ export const PersonalHealthBanner: React.FC<PersonalHealthBannerProps> = ({
   alerts,
   ingredients = [],
 }) => {
-  const { medicalFlags } = profile;
+  const medicalFlags = profile?.medicalFlags || {
+    isDiabetic: false,
+    hasHypertension: false,
+    isCeliac: false,
+    lowSodiumDiet: false,
+  };
 
   // 1. Build check evaluations
   const checks: ConditionCheckResult[] = [];

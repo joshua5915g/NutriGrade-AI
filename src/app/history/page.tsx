@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Navbar } from '../../components/Navbar';
 import {
   Apple,
   Search,
@@ -78,38 +79,8 @@ export default function HistoryPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col font-sans pb-16 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100">
-      {/* HEADER */}
-      <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/70 dark:bg-slate-900/70 border-b border-slate-200/60 dark:border-slate-800/60 shadow-sm transition-all">
-        <div className="max-w-6xl mx-auto px-4 md:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link
-              href="/"
-              className="p-2 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-all border border-slate-200/60 dark:border-slate-700/60"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </Link>
-            <div className="flex flex-col">
-              <span className="text-base font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
-                Scan History <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-500 font-semibold border border-indigo-500/20">Unlimited</span>
-              </span>
-              <span className="text-[10px] text-slate-400 font-medium">NutriGrade AI Storage Manager</span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            {records.length > 0 && (
-              <button
-                onClick={() => setIsConfirmingClear(true)}
-                className="px-3.5 py-1.5 rounded-full bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 font-semibold text-xs transition-all border border-rose-500/20 flex items-center gap-1.5"
-              >
-                <Trash2 className="w-4 h-4 text-rose-500" />
-                <span>Clear History</span>
-              </button>
-            )}
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen flex flex-col font-sans pb-16 bg-slate-50 dark:bg-brand-darkBg text-slate-900 dark:text-brand-cream transition-colors">
+      <Navbar />
 
       {/* MAIN CONTENT */}
       <main className="flex-1 max-w-6xl mx-auto w-full px-4 md:px-8 pt-8 space-y-6">
@@ -118,24 +89,36 @@ export default function HistoryPage() {
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
               <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white flex items-center gap-2.5">
-                <History className="w-7 h-7 text-indigo-500" />
+                <History className="w-7 h-7 text-brand-lime" />
                 Unlimited Scan History
               </h1>
-              <p className="text-xs md:text-sm text-slate-500 dark:text-slate-400 mt-1">
+              <p className="text-xs md:text-sm text-slate-500 dark:text-brand-cream/70 mt-1">
                 IndexedDB storage containing all analyzed food products, barcode lookups, and nutritional audits.
               </p>
             </div>
 
-            {/* SEARCH INPUT */}
-            <div className="relative w-full md:w-80">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search history by product name or brand..."
-                className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-white shadow-sm"
-              />
+            <div className="flex items-center gap-2.5 w-full md:w-auto">
+              {records.length > 0 && (
+                <button
+                  onClick={() => setIsConfirmingClear(true)}
+                  className="px-3.5 py-2.5 rounded-2xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 font-semibold text-xs transition-all border border-rose-500/20 flex items-center gap-1.5 shrink-0"
+                >
+                  <Trash2 className="w-4 h-4 text-rose-500" />
+                  <span>Clear History</span>
+                </button>
+              )}
+
+              {/* SEARCH INPUT */}
+              <div className="relative w-full md:w-72">
+                <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search history by product name or brand..."
+                  className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-white shadow-sm"
+                />
+              </div>
             </div>
           </div>
 

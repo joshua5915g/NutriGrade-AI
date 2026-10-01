@@ -58,6 +58,7 @@ import {
   DIETARY_CONFIG,
 } from '../components/DietaryPreferencesModal';
 import { PersonalizeDrawer } from '../components/PersonalizeDrawer';
+import { Navbar } from '../components/Navbar';
 import { OfflineBanner } from '../components/OfflineBanner';
 import { FloatingGuideModal, FloatingGuideButton } from '../components/FloatingGuideModal';
 import { NutriBotDrawer } from '../components/NutriBotDrawer';
@@ -603,110 +604,8 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col font-sans pb-16">
-      {/* 1. APPLE-STYLE GLASSMORPHIC HEADER */}
-      <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/80 dark:bg-brand-darkCard/90 border-b border-slate-200/60 dark:border-brand-cream/20 shadow-md transition-all">
-        <div className="max-w-6xl mx-auto px-4 md:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-2xl bg-gradient-to-tr from-brand-forest to-brand-lime text-brand-darkBg shadow-md shadow-brand-lime/20">
-              <Apple className="w-5 h-5 font-bold" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-base font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
-                NutriGrade <span className="text-xs px-2 py-0.5 rounded-full bg-brand-lime/15 text-brand-lime font-bold border border-brand-lime/30 shadow-sm">AI</span>
-              </span>
-              <span className="text-[10px] text-brand-cream/80 font-medium">Nutritional Quality &amp; Additive Analysis Engine</span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            {/* Guide & How It Works Button */}
-            <button
-              onClick={() => setIsGuideModalOpen(true)}
-              className="px-3 py-1.5 rounded-full bg-brand-lime/10 hover:bg-brand-lime/20 text-brand-lime font-bold text-xs transition-all border border-brand-lime/30 flex items-center gap-1.5 shadow-sm active:scale-95"
-              title="Interactive Guide & Preview"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-brand-lime" />
-              <span className="hidden sm:inline">How It Works</span>
-            </button>
-
-            {/* Compare Products Button */}
-            <Link
-              href="/compare"
-              className="px-3 py-1.5 rounded-full bg-brand-forest/20 hover:bg-brand-forest/30 text-brand-cream font-semibold text-xs transition-all border border-brand-cream/30 flex items-center gap-1.5"
-              title="Side-by-Side Product Comparison"
-            >
-              <Scale className="w-4 h-4 text-brand-lime" />
-              <span className="hidden sm:inline">Compare</span>
-            </Link>
-
-            {/* Daily Fuel Tracker Button */}
-            <Link
-              href="/tracker"
-              className="px-3 py-1.5 rounded-full bg-brand-lime/10 hover:bg-brand-lime/20 text-brand-lime font-semibold text-xs transition-all border border-brand-lime/30 flex items-center gap-1.5"
-              title="Daily Intake & Biological Ledger"
-            >
-              <Activity className="w-4 h-4 text-brand-lime" />
-              <span className="hidden sm:inline">Daily Fuel</span>
-            </Link>
-
-            {/* Meal Builder Button */}
-            <Link
-              href="/meal-builder"
-              className="px-3 py-1.5 rounded-full bg-brand-forest/20 hover:bg-brand-forest/30 text-brand-cream font-semibold text-xs transition-all border border-brand-cream/30 flex items-center gap-1.5"
-              title="Custom Recipe & Meal Nutri-Grader"
-            >
-              <UtensilsCrossed className="w-4 h-4 text-brand-lime" />
-              <span className="hidden sm:inline">Recipes</span>
-            </Link>
-
-            {/* Shopping Lists Button */}
-            <Link
-              href="/lists"
-              className="px-3 py-1.5 rounded-full bg-brand-lime/10 hover:bg-brand-lime/20 text-brand-lime font-semibold text-xs transition-all border border-brand-lime/30 flex items-center gap-1.5"
-            >
-              <ShoppingCart className="w-4 h-4 text-brand-lime" />
-              <span className="hidden sm:inline">Shopping Lists</span>
-            </Link>
-
-            {/* Hall of Shame Button */}
-            <Link
-              href="/hall-of-shame"
-              className="px-3 py-1.5 rounded-full bg-brand-rust/10 hover:bg-brand-rust/20 text-brand-rust font-semibold text-xs transition-all border border-brand-rust/30 flex items-center gap-1.5"
-            >
-              <Flame className="w-4 h-4 text-brand-rust" />
-              <span className="hidden sm:inline">Hall of Shame</span>
-            </Link>
-
-            {/* Pantry Audit Button */}
-            <Link
-              href="/pantry"
-              className="px-3 py-1.5 rounded-full bg-brand-forest/20 hover:bg-brand-forest/30 text-brand-cream font-semibold text-xs transition-all border border-brand-cream/30 flex items-center gap-1.5"
-            >
-              <PackageCheck className="w-4 h-4 text-brand-lime" />
-              <span className="hidden sm:inline">Pantry Audit</span>
-            </Link>
-
-            {/* Scan History Page Button */}
-            <Link
-              href="/history"
-              className="p-2.5 rounded-full bg-slate-100 dark:bg-brand-darkCard hover:bg-slate-200 dark:hover:bg-brand-forest/40 text-slate-600 dark:text-brand-cream transition-all border border-slate-200/50 dark:border-brand-cream/20"
-              title="Full Unlimited Scan History"
-              aria-label="Full Scan History"
-            >
-              <History className="w-4 h-4 text-brand-lime" />
-            </Link>
-
-            {/* Theme Toggle */}
-            <button
-              onClick={toggleDarkMode}
-              className="p-2.5 rounded-full bg-slate-100 dark:bg-brand-darkCard hover:bg-slate-200 dark:hover:bg-brand-forest/40 text-slate-600 dark:text-brand-cream transition-all border border-slate-200/50 dark:border-brand-cream/20"
-              aria-label="Toggle dark mode"
-            >
-              {isDarkMode ? <Sun className="w-4 h-4 text-brand-lime" /> : <Moon className="w-4 h-4 text-slate-700" />}
-            </button>
-          </div>
-        </div>
-      </header>
+      {/* 1. UNIFIED RESPONSIVE NAVBAR */}
+      <Navbar onOpenGuide={() => setIsGuideModalOpen(true)} />
 
       {/* AMBER OFFLINE MODE INDICATOR & SYNC BANNER */}
       <OfflineBanner

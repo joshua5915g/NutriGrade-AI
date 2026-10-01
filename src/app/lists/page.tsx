@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Navbar } from '../../components/Navbar';
 import {
   ShoppingCart,
   Plus,
@@ -116,38 +117,8 @@ export default function ListsPage() {
   const progressPct = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
 
   return (
-    <div className="min-h-screen flex flex-col font-sans pb-16 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100">
-      {/* HEADER */}
-      <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/70 dark:bg-slate-900/70 border-b border-slate-200/60 dark:border-slate-800/60 shadow-sm transition-all">
-        <div className="max-w-6xl mx-auto px-4 md:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link
-              href="/"
-              className="p-2 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-all border border-slate-200/60 dark:border-slate-700/60"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </Link>
-            <div className="flex flex-col">
-              <span className="text-base font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
-                Shopping Lists <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 font-semibold border border-emerald-500/20">Grocery Sync</span>
-              </span>
-              <span className="text-[10px] text-slate-400 font-medium">NutriGrade AI Manager</span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            {activeList && (
-              <button
-                onClick={handleCopyTextExport}
-                className="px-3 py-1.5 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-semibold text-xs transition-all border border-emerald-500/20 flex items-center gap-1.5"
-              >
-                <Share2 className="w-4 h-4 text-emerald-500" />
-                <span>Export List</span>
-              </button>
-            )}
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen flex flex-col font-sans pb-16 bg-slate-50 dark:bg-brand-darkBg text-slate-900 dark:text-brand-cream transition-colors">
+      <Navbar />
 
       {/* TOAST COPY NOTIFICATION */}
       <AnimatePresence>

@@ -165,7 +165,7 @@ export const NutritionDashboard: React.FC<NutritionDashboardProps> = ({
     >
       {/* 1. PERSONAL HEALTH VERIFICATION BANNER */}
       <PersonalHealthBanner
-        profile={userProfile}
+        profile={profile}
         normalizedData={normalizedData}
         alerts={alerts}
       />
@@ -480,7 +480,7 @@ export const NutritionDashboard: React.FC<NutritionDashboardProps> = ({
       <HealthySwaps
         productName={explanation}
         currentGrade={nutriScore.grade}
-        profile={userProfile}
+        profile={profile}
       />
 
       {/* 9. FRONT VS. BACK GREENWASHING AUDIT CARD */}
