@@ -98,10 +98,8 @@ describe('Nutri-Score Algorithm', () => {
     expect(calculateNutriScore(makeData({ sugars_per_100g: 20 })).grade).toBe('C'); // N=4, P=0 -> score = 4
     
     // Score 11 to 18 -> D
-    expect(calculateNutriScore(makeData({ sugars_per_100g: 42 })).grade).toBe('D'); // N=9, P=0 -> score = 9? Wait, sugars 42g is 9 points. Let's make score higher:
-    // Let's use sugar 42g (9 points) + energy 500 kJ (1 point) = 10 points (Grade C).
-    // Let's use sugar 42g (9 points) + energy 800 kJ (2 points) = 11 points (Grade D).
-    expect(calculateNutriScore(makeData({ sugars_per_100g: 42, calories_per_100g: 191 })).grade).toBe('D'); // Sugars (9) + Energy (800kJ -> 2) = 11 (Grade D)
+    // Sugars 42g (9 points) + Energy 800 kJ / 191 kcal (2 points) = 11 points (Grade D)
+    expect(calculateNutriScore(makeData({ sugars_per_100g: 42, calories_per_100g: 191 })).grade).toBe('D');
     
     // Score >= 19 -> E
     expect(calculateNutriScore(makeData({ sugars_per_100g: 46, saturated_fat_per_100g: 10, sodium_mg_per_100g: 901 })).grade).toBe('E'); // Sugars (10) + SatFat (9) + Sodium (10) = 29 -> score = 29 -> Grade E
