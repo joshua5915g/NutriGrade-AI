@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Download,
   Share2,
@@ -36,11 +36,18 @@ export const ExportReport: React.FC<ExportReportProps> = ({
   const [isExporting, setIsExporting] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
   const [inPantry, setInPantry] = useState(() => isItemInPantry(productName));
+  const [toastMessage, setToastMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
   const reportRef = useRef<HTMLDivElement>(null);
+
+  const showToast = (text: string, type: 'success' | 'error' = 'success') => {
+    setToastMessage({ text, type });
+    setTimeout(() => setToastMessage(null), 3500);
+  };
 
   const handleAddToPantry = () => {
     addToPantry(analysis, productName);
     setInPantry(true);
+    showToast(`Added ${productName} to your Pantry!`);
   };
 
   const { normalizedData: nd, nutriScore, novaGroup, additives } = analysis;
@@ -86,9 +93,10 @@ export const ExportReport: React.FC<ExportReportProps> = ({
 
       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, Math.min(pdfHeight, pdf.internal.pageSize.getHeight()));
       pdf.save(`NutriGrade_Report_${productName.replace(/\s+/g, '_')}.pdf`);
+      showToast('PDF report generated and downloaded!');
     } catch (err) {
       console.error('PDF export error:', err);
-      alert('Failed to generate PDF report.');
+      showToast('Failed to generate PDF report. Please try again.', 'error');
     } finally {
       setIsExporting(false);
     }
@@ -160,6 +168,24 @@ export const ExportReport: React.FC<ExportReportProps> = ({
 
   return (
     <>
+      {/* Toast Notification */}
+      <AnimatePresence>
+        {toastMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className={`fixed top-20 right-6 z-50 px-4 py-3 rounded-2xl text-xs font-bold shadow-2xl flex items-center gap-2 border ${
+              toastMessage.type === 'error'
+                ? 'bg-rose-600 text-white border-rose-400'
+                : 'bg-emerald-600 text-white border-emerald-400'
+            }`}
+          >
+            <span>{toastMessage.text}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Export Buttons Row */}
       <div className="flex items-center gap-3 flex-wrap">
         <button

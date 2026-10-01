@@ -65,15 +65,22 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
 
+  const [validationError, setValidationError] = useState<string | null>(null);
+
+  const showValidationError = (msg: string) => {
+    setValidationError(msg);
+    setTimeout(() => setValidationError(null), 4000);
+  };
+
   // Validate file before processing (image formats restricted, PDFs deprecated for food scans)
   const validateFile = (file: File): boolean => {
     const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
     if (!allowedTypes.includes(file.type) && !file.type.startsWith('image/')) {
-      alert('Unsupported format. Please capture or upload a JPEG, PNG, or WebP food label image.');
+      showValidationError('Unsupported format. Please capture or upload a JPEG, PNG, or WebP food label image.');
       return false;
     }
     if (file.size > 15 * 1024 * 1024) {
-      alert('File size exceeds 15MB limit.');
+      showValidationError('File size exceeds 15MB limit.');
       return false;
     }
     return true;
@@ -172,7 +179,7 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
       }
     } catch (err) {
       console.error('Camera access error:', err);
-      alert('Unable to access camera. Please check browser permissions.');
+      showValidationError('Unable to access camera. Please check browser permissions.');
       setIsCameraActive(false);
     }
   };
@@ -222,6 +229,21 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
 
   return (
     <div className="w-full max-w-2xl mx-auto space-y-4">
+      {/* Dynamic Validation Toast */}
+      <AnimatePresence>
+        {validationError && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-600 dark:text-rose-400 text-xs font-semibold flex items-center gap-2 shadow-lg"
+          >
+            <AlertCircle className="w-4 h-4 shrink-0 text-rose-500" />
+            <span>{validationError}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Direct Barcode Scanner Component */}
       {onBarcodeSubmitted && (
         <BarcodeScanner

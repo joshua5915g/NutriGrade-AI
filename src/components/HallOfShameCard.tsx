@@ -83,11 +83,24 @@ export const HallOfShameCard: React.FC<HallOfShameCardProps> = ({
 
     // Clipboard fallback
     try {
-      await navigator.clipboard.writeText(shareText);
-      setIsCopied(true);
-      setTimeout(() => setIsCopied(false), 2000);
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(shareText);
+        setIsCopied(true);
+        setTimeout(() => setIsCopied(false), 2000);
+      } else {
+        const textarea = document.createElement('textarea');
+        textarea.value = shareText;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        setIsCopied(true);
+        setTimeout(() => setIsCopied(false), 2000);
+      }
     } catch (err) {
-      alert(shareText);
+      console.warn('Clipboard write prevented:', err);
     }
   };
 

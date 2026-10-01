@@ -81,17 +81,6 @@ export const NutritionDashboard: React.FC<NutritionDashboardProps> = ({
   const pediatricSafety = evaluatePediatricSafety(normalizedData, ingredientStrings);
   const allergenScanResult = scanAllergenMatrix(ingredientStrings, profile, explanation);
 
-  // Default active profile fallback
-  const userProfile: UserProfile = profile || {
-    medicalFlags: {
-      isDiabetic: true,
-      hasHypertension: true,
-      isCeliac: false,
-      lowSodiumDiet: false,
-    },
-    goals: {},
-  };
-
   // Helper for NOVA group configurations
   const getNovaConfig = (group: number) => {
     switch (group) {

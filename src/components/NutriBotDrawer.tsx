@@ -51,13 +51,15 @@ export const NutriBotDrawer: React.FC<NutriBotDrawerProps> = ({
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const previousProductRef = useRef<string | null>(null);
 
-  // Initialize greeting with context
+  // Initialize greeting with context or notify when new product is loaded
   useEffect(() => {
+    const greeting = currentProduct
+      ? `Hello! I'm NutriBot, your AI Nutrition Copilot. I'm actively analyzing **${currentProduct.name}** (Nutri-Score ${currentProduct.analysis.nutriScore.grade}, NOVA ${currentProduct.analysis.novaGroup}). What dietary, medical, or ingredient questions can I answer for you?`
+      : `Hello! I'm NutriBot, your clinical AI Nutritionist. Scan any product or ask me about additives, ultra-processed foods, glycemic index, or clean swaps!`;
+
     if (messages.length === 0) {
-      const greeting = currentProduct
-        ? `Hello! I'm NutriBot, your AI Nutrition Copilot. I'm actively analyzing **${currentProduct.name}** (Nutri-Score ${currentProduct.analysis.nutriScore.grade}, NOVA ${currentProduct.analysis.novaGroup}). What dietary, medical, or ingredient questions can I answer for you?`
-        : `Hello! I'm NutriBot, your clinical AI Nutritionist. Scan any product or ask me about additives, ultra-processed foods, glycemic index, or clean swaps!`;
       setMessages([
         {
           id: 'msg_welcome',
@@ -66,8 +68,35 @@ export const NutriBotDrawer: React.FC<NutriBotDrawerProps> = ({
           timestamp: 'Just now',
         },
       ]);
+      previousProductRef.current = currentProduct?.name || null;
+    } else if (currentProduct && currentProduct.name !== previousProductRef.current) {
+      // User scanned a new product mid-conversation
+      previousProductRef.current = currentProduct.name;
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `msg_switched_${Date.now()}`,
+          sender: 'bot',
+          text: `🔄 **New Food Scanned:** Now analyzing **${currentProduct.name}** (Nutri-Score ${currentProduct.analysis.nutriScore.grade}, NOVA ${currentProduct.analysis.novaGroup}). Ask me anything about its ingredients, additives, or health impact!`,
+          timestamp: 'Just now',
+        },
+      ]);
     }
   }, [currentProduct]);
+
+  const handleResetChat = () => {
+    const greeting = currentProduct
+      ? `Hello! I'm NutriBot, your AI Nutrition Copilot. I'm actively analyzing **${currentProduct.name}** (Nutri-Score ${currentProduct.analysis.nutriScore.grade}, NOVA ${currentProduct.analysis.novaGroup}). What dietary, medical, or ingredient questions can I answer for you?`
+      : `Hello! I'm NutriBot, your clinical AI Nutritionist. Scan any product or ask me about additives, ultra-processed foods, glycemic index, or clean swaps!`;
+    setMessages([
+      {
+        id: `msg_welcome_${Date.now()}`,
+        sender: 'bot',
+        text: greeting,
+        timestamp: 'Just now',
+      },
+    ]);
+  };
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -198,12 +227,22 @@ export const NutriBotDrawer: React.FC<NutriBotDrawerProps> = ({
                   </div>
                 </div>
 
-                <button
-                  onClick={() => setIsOpen(false)}
-                  className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-brand-darkBg text-slate-400 hover:text-slate-600 dark:hover:text-white"
-                >
-                  <X className="w-5 h-5" />
-                </button>
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={handleResetChat}
+                    className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-brand-darkBg text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors"
+                    title="Reset Conversation"
+                  >
+                    <RefreshCw className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => setIsOpen(false)}
+                    className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-brand-darkBg text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors"
+                    title="Close"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
               </div>
 
               {/* CURRENT PRODUCT CONTEXT CHIP */}
