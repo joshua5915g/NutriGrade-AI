@@ -258,16 +258,15 @@ export function scanAllergenMatrix(
 
     // Check direct ingredient presence first
     for (const kw of def.directKeywords) {
-      // Check in ingredient list
       for (const ing of normalizedIngredients) {
-        if (
-          ing === kw ||
-          ing.includes(` ${kw}`) ||
-          ing.startsWith(`${kw} `) ||
-          ing.includes(`(${kw})`) ||
-          ing.includes(` ${kw} `) ||
-          ing.includes(kw)
-        ) {
+        // Clinical false-positive safeguards
+        if (def.id === 'egg' && /eggplant/i.test(ing)) continue;
+        if ((def.id === 'tree_nut' || def.id === 'peanut') && /(?:nutmeg|butternut|doughnut|donut|coconut)/i.test(ing)) continue;
+        if (def.id === 'wheat_gluten' && /buckwheat/i.test(ing) && !/(?:wheat\s+flour|gluten)/i.test(ing)) continue;
+
+        const escaped = kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const kwRegex = new RegExp(`(^|[^a-z0-9])${escaped}([^a-z0-9]|$)`, 'i');
+        if (kwRegex.test(ing)) {
           presence = 'DIRECT';
           if (!matchedTerms.includes(kw)) {
             matchedTerms.push(kw);

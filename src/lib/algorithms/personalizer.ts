@@ -63,7 +63,12 @@ export function applyPersonalOverlay(
     ingredients.forEach((ing) => {
       const lowerIng = ing.toLowerCase();
       GLUTEN_KEYWORDS.forEach((keyword) => {
-        if (lowerIng.includes(keyword) && !glutenMatches.includes(keyword)) {
+        // Safeguard: Buckwheat is naturally gluten-free and not wheat
+        if (keyword === 'wheat' && lowerIng.includes('buckwheat') && !/(?:wheat\s+flour|whole\s+wheat|\bwheat\b)/i.test(lowerIng.replace(/buckwheat/g, ''))) {
+          return;
+        }
+        const kwRegex = new RegExp(`(^|[^a-z0-9])${keyword}([^a-z0-9]|$)`, 'i');
+        if (kwRegex.test(lowerIng) && !glutenMatches.includes(keyword)) {
           glutenMatches.push(keyword);
         }
       });
@@ -74,7 +79,11 @@ export function applyPersonalOverlay(
       healthWarnings.forEach((warning) => {
         const lowerWarning = warning.toLowerCase();
         GLUTEN_KEYWORDS.forEach((keyword) => {
-          if (lowerWarning.includes(keyword) && !glutenMatches.includes(keyword)) {
+          if (keyword === 'wheat' && lowerWarning.includes('buckwheat') && !/(?:wheat\s+flour|whole\s+wheat|\bwheat\b)/i.test(lowerWarning.replace(/buckwheat/g, ''))) {
+            return;
+          }
+          const kwRegex = new RegExp(`(^|[^a-z0-9])${keyword}([^a-z0-9]|$)`, 'i');
+          if (kwRegex.test(lowerWarning) && !glutenMatches.includes(keyword)) {
             glutenMatches.push(keyword);
           }
         });

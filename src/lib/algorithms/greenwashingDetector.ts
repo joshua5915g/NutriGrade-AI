@@ -59,14 +59,24 @@ export function detectGreenwashing(
   }
 
   if (lowerFrontText.includes('no added sugar') || lowerFrontText.includes('no added sugars')) {
-    const isMisleading = normalized.added_sugars_per_100g > 0;
+    const hiddenSugarMatches = ingredients.filter((ing) =>
+      /(?:sugar|syrup|dextrose|fructose|maltose|honey|sucrose|concentrated\s+juice|cane\s+juice|corn\s+sweetener|molasses)/i.test(ing)
+    );
+    const hasDeclaredAddedSugar = normalized.added_sugars_per_100g > 0;
+    const isMisleading = hasDeclaredAddedSugar || hiddenSugarMatches.length > 0;
+
+    let explanation = `Front claim "No Added Sugar" is valid. No added sugars or caloric syrups were detected.`;
+    if (hasDeclaredAddedSugar) {
+      explanation = `Front claim "No Added Sugar" is misleading. The nutrition panel declares ${normalized.added_sugars_per_100g}g of added sugars per 100g.`;
+    } else if (hiddenSugarMatches.length > 0) {
+      explanation = `Front claim "No Added Sugar" is misleading. While added sugars were not declared in the nutrition panel, the ingredients contain added caloric sweeteners (${hiddenSugarMatches.join(', ')}).`;
+    }
+
     claims.push({
       claim: 'No Added Sugar',
       isMisleading,
       severity: isMisleading ? 'high' : 'info',
-      explanation: isMisleading
-        ? `Front claim "No Added Sugar" is misleading. The nutrition panel declares ${normalized.added_sugars_per_100g}g of added sugars per 100g.`
-        : `Front claim "No Added Sugar" is valid. No added sugars were declared.`,
+      explanation,
     });
   }
 

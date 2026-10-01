@@ -175,7 +175,22 @@ export function detectSeedOils(ingredients: string[]): SeedOilRadarResult {
   for (const item of INDUSTRIAL_SEED_OILS) {
     if (seen.has(item.name)) continue;
 
-    const isMatch = lowerIngredients.some((ing) => ing.includes(item.pattern));
+    const isMatch = lowerIngredients.some((ing) => {
+      if (!ing.includes(item.pattern)) return false;
+
+      // Safeguards against whole seed false positives
+      if (item.pattern === 'sunflower' && ing.includes('seed') && !ing.includes('oil')) {
+        return false; // Whole sunflower seeds, sunflower seed kernels, or sunflower butter without added oil
+      }
+      if (item.pattern === 'grapeseed' && ing.includes('extract') && !ing.includes('oil')) {
+        return false; // Grapeseed antioxidant extract
+      }
+      if (item.pattern === 'cottonseed' && !ing.includes('oil')) {
+        return false;
+      }
+      return true;
+    });
+
     if (isMatch) {
       detectedOils.push({
         name: item.name,

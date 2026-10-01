@@ -74,8 +74,16 @@ export function evaluatePediatricSafety(
     }
   }
 
-  // 2. High Added Sugars
-  if (normalized.sugars_per_100g >= 15) {
+  // 2. High Added Sugars (AAP Guidelines specifically target ADDED sugars, not whole fruit fructose or milk lactose)
+  const hasAddedSugarIngredients = normIngredients.some((ing) =>
+    /(?:sugar|syrup|dextrose|fructose|maltose|honey|sucrose|concentrated\s+juice|corn\s+sweetener)/i.test(ing)
+  );
+  const isWholeFoodWithoutAddedSugar = normalized.added_sugars_per_100g === 0 && !hasAddedSugarIngredients;
+  const pediatricSugarToCheck = isWholeFoodWithoutAddedSugar
+    ? 0
+    : (normalized.added_sugars_per_100g > 0 ? normalized.added_sugars_per_100g : normalized.sugars_per_100g);
+
+  if (pediatricSugarToCheck >= 15) {
     hazards.push({
       id: 'high_pediatric_sugar',
       name: 'Severe Added Sugar Density (>15g/100g)',
@@ -87,7 +95,7 @@ export function evaluatePediatricSafety(
     });
     safetyScore -= 30;
     parentTips.push('Exceeds recommended daily sugar ceiling for young children in a single portion.');
-  } else if (normalized.sugars_per_100g >= 8) {
+  } else if (pediatricSugarToCheck >= 8) {
     hazards.push({
       id: 'moderate_pediatric_sugar',
       name: 'Moderate Added Sugar (8–15g/100g)',

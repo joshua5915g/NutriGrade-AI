@@ -46,21 +46,33 @@ function searchLocalDatabase(query: string): SearchProductResult[] {
 
   return sampleList
     .filter((item) => {
-      const matchName = item.name.toLowerCase().includes(cleanQ);
-      const matchBrand = item.brand.toLowerCase().includes(cleanQ);
-      const matchIngredient = item.ingredients.some((ing) => ing.toLowerCase().includes(cleanQ));
+      const matchName = (item.name || '').toLowerCase().includes(cleanQ);
+      const matchBrand = (item.brand || '').toLowerCase().includes(cleanQ);
+      const matchIngredient = (item.ingredients || []).some((ing) => ing.toLowerCase().includes(cleanQ));
       return matchName || matchBrand || matchIngredient;
     })
     .map((item) => ({
       id: item.id,
       barcode: `sample_${item.id}`,
       productName: item.name,
-      brand: item.brand,
-      imageThumbUrl: item.imagePreview,
+      brand: item.brand || 'NutriGrade Curated',
+      imageThumbUrl: item.imagePreview || '',
       nutriScoreGrade: item.analysis.nutriScore.grade,
       novaGroup: item.analysis.novaGroup,
-      ingredients: item.ingredients,
-      rawData: item.rawData,
+      ingredients: item.ingredients || [],
+      rawData: item.rawData || {
+        calories: item.analysis.normalizedData.calories_per_100g,
+        total_fat: item.analysis.normalizedData.total_fat_per_100g,
+        saturated_fat: item.analysis.normalizedData.saturated_fat_per_100g,
+        trans_fat: item.analysis.normalizedData.trans_fat_per_100g,
+        sugars: item.analysis.normalizedData.sugars_per_100g,
+        added_sugars: item.analysis.normalizedData.added_sugars_per_100g,
+        sodium_mg: item.analysis.normalizedData.sodium_mg_per_100g,
+        fiber: item.analysis.normalizedData.fiber_per_100g,
+        protein: item.analysis.normalizedData.protein_per_100g,
+        serving_size_g: 100,
+        is_per_100g: true,
+      },
       analysis: item.analysis,
     }));
 }
